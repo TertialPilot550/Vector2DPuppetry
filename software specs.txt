@@ -86,7 +86,7 @@ ENTITY BUILDER SOFTWARE, where you can combine images to create an entity object
 
 Use Json to store and load entities from files
 
-Feautres of the applications:
+Features of the applications:
 	- Run a new or existing session. Manipulate and render active entities and backgrounds
 	- Create entities using some sub activitiy where components can be added and configured
 	- adding backgrounds or entities can be done by simply adding them to the project directory.
