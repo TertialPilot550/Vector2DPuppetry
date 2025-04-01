@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.Activities;
+package com.sammc.puppet_application.activities;
 
 public class EntityBuilderFrame {
     

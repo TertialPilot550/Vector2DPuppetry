@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.Entity;
+package com.sammc.puppet_application.screen_objects;
 /**
  * Represent a connection between two components on the screen
  * 

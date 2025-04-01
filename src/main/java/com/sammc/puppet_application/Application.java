@@ -1,11 +1,13 @@
 package com.sammc.puppet_application;
 
+import com.sammc.puppet_application.activities.animation_frame.AnimationFrame;
+
 public class Application {
 
     public static void main(String[] args) {
 
-        System.out.println("Hello World");
-
+        AnimationFrame frame = new AnimationFrame();
+        
 
     }
 
