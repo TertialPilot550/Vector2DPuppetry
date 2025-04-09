@@ -7,31 +7,22 @@ package com.sammc.puppet_application.screen_objects;
  */
 public class Connection {
     
-    private Component parent;
-    private Component child;
-    private float[] relativeLocation;
-
-    public float[] getRelativeLocation() {
-        return relativeLocation;
-    }
-
-    public void setRelativeLocation(float[] relativeLocation) {
-        this.relativeLocation = relativeLocation;
-    }
-
-    public void setParent(Component component) {
+    private Entity parent;
+    private Entity child;
+   
+    public void setParent(Entity component) {
         parent = component;
     }
 
-    public Component getParent() {
+    public Entity getParent() {
         return parent;
     }
 
-    public void setChild(Component component) {
+    public void setChild(Entity component) {
         child = component;
     }
 
-    public Component getChild() {
+    public Entity getChild() {
         return child;
     }
 }
