@@ -7,7 +7,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -68,6 +70,28 @@ public class Entity {
             acc.addAll(child.getChildren()); 
         }
         return acc;
+    }
+
+    public Polygon getBoundingBox() {
+        Point2D origin = new Point2D.Double(0, 0);
+        Point2D t_origin = new Point2D.Double();
+        Point2D width = new Point2D.Double(getVisualAsset().getWidth(),0);
+        Point2D t_width = new Point2D.Double();
+        Point2D height = new Point2D.Double(0,getVisualAsset().getHeight());
+        Point2D t_height = new Point2D.Double();
+        Point2D r_corner = new Point2D.Double(getVisualAsset().getWidth(), getVisualAsset().getHeight());
+        Point2D t_r_corner = new Point2D.Double();
+
+        getOrientation().transform(origin, t_origin);
+        getOrientation().transform(width, t_width);
+        getOrientation().transform(height, t_height);
+        getOrientation().transform(r_corner, t_r_corner);
+
+        return new Polygon(
+            new int[] {(int) t_origin.getX(), (int) t_width.getX(), (int) t_r_corner.getX(), (int) t_height.getX()}, 
+            new int[] {(int) t_origin.getY(), (int) t_width.getY(), (int) t_r_corner.getY(), (int) t_height.getY()},
+            4
+        );
     }
 
     public static Entity fromString(String string) throws JsonParseException, JsonMappingException, IOException {

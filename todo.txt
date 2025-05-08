@@ -1,0 +1,2 @@
+- implement control panel with rotate, directional scale, and nudging Translations
+- load components from files

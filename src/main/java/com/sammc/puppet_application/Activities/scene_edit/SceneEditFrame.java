@@ -21,15 +21,19 @@ public class SceneEditFrame extends JFrame {
     private Screen screen;
     private ProjectOverviewPanel projectPanel;
     private ControlsPanel controlsPanel;
-    private List<Entity> entities = new ArrayList<>();
+    private List<Entity> entities;
 
 
     private void buildTestEntities() {
         Entity e = new Entity();
-        e.getOrientation().translate(5, 5);
-        e.getOrientation().scale(5,5);
+        e.getOrientation().rotate(45 / 180 * Math.PI);
+        double scale = 0.05;
+        e.getOrientation().translate(0, 0);
+        e.getOrientation().scale(scale,scale);
         BufferedImage img = Util.readImage("./onion.png");
+        System.out.println("Image loaded: " + img);
         e.setVisualAsset(img);
+        System.out.println("Entity created: " + e.getId());
         entities.add(e);
     }
 
@@ -42,6 +46,7 @@ public class SceneEditFrame extends JFrame {
         setLayout(new BorderLayout());
         setVisible(true);
         setBackground(Color.GRAY);
+        entities = new ArrayList<>();
 
         buildTestEntities();
         

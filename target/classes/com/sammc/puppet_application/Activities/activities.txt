@@ -18,3 +18,61 @@ MainMenu -> New/Open Project popup -> AnimationFrame(scene editor)
 	|-----> EntityBuilder
 	|
 	|-----> Convert Image directory to video popup
+
+
+	Old mouse dragged code
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		if (!wasPreviousMouseDraggedCall()) {
+			handleFirstMouseDraggedCall(e);
+		} else {
+			handleLaterMouseDraggedCalls(e);
+		}
+	}
+
+	private boolean wasPreviousMouseDraggedCall() {
+		if (mouseOrgin.getX() == -1 && mouseOrgin.getY() == -1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private void handleFirstMouseDraggedCall(MouseEvent e) {
+		CartesianPoint mouseLocation = new CartesianPoint(e.getX(), e.getY());
+		AbstractComponent ac = getElementAt(mouseLocation);
+		if (ac == null) {
+			select(null);
+		} else {
+			select(ac);
+			updateMouseOrgin(e);
+		}
+	}
+
+
+	private void updateMouseOrgin(MouseEvent e) {
+		mouseOrgin = new CartesianPoint(e.getX(), e.getY());
+	}
+
+	private void handleLaterMouseDraggedCalls(MouseEvent e) {
+		CartesianPoint movementSinceLastMouseEvent = getMovementSinceLastMouseEvent(e);
+		updateMouseOrgin(e);
+
+		moveSelectedElement(movementSinceLastMouseEvent);
+	}
+
+	private CartesianPoint getMovementSinceLastMouseEvent(MouseEvent e) {
+		int deltaX = e.getX() - mouseOrgin.getX();
+		int deltaY = e.getY() - mouseOrgin.getY();
+		return new CartesianPoint(deltaX, deltaY);
+	}
+
+	private void moveSelectedElement(CartesianPoint relativeLocation) {
+		int dx = relativeLocation.getX();
+		int dy = relativeLocation.getY();
+		if (hasSelectedComponent()) {
+			moveSelected(dx, dy);
+		}
+		repaint();
+	}
