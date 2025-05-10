@@ -46,6 +46,11 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         
     }
 
+    public Entity getSelected() {
+        return selected;
+    }
+    
+
     // Main behavior
     @Override
     public void paintComponent(Graphics g) {

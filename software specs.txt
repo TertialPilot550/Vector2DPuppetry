@@ -62,15 +62,15 @@ project_folder
 		| - EntityLibrary
 				| - CharactersLibrary
 				| - ObjectLibrary
-		| - BackgroundLibrary
-		| - SceneLibrary
+				| - SceneLibrary (groups of objects)
+		| - Images (including backgrounds and visual assets for entities)
+				| - Backgrounds
+				| - Assets
 		| - Sessions 
 			| - Session1
 				| - ActiveComponents
 				| - DependantComponents
 				| - OutputFiles
-		| - Output
-			| - Session1
 
 
 VECTOR SOFTWARE, where you can add predefined entities and backgrounds. Backgrounds will just be treated as backgrounds again. any necessary set objects will just be implemeneted as entities.
@@ -91,3 +91,22 @@ Features of the applications:
 	- Create entities using some sub activitiy where components can be added and configured
 	- adding backgrounds or entities can be done by simply adding them to the project directory.
 	- Turn an output directory into a video, so that scenes can be turned into videos with evenly spaced frames. Any variance in timing should be done in the editing process.
+
+
+For now, each entity is completely defined by:
+	- affine transform flat matrix
+	- visual Assets
+	- child components/connections
+	- animation files
+
+Entity File:
+each line will be annoted starting with a tag indicating the intended meaning of the line
+to process, scan each line and handle each case
+
+Start File
+""
+transform [3, 3, 3, 3, 3, 3]
+asset onion.png
+
+""
+EOF

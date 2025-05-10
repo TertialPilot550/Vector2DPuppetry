@@ -3,9 +3,14 @@ package com.sammc.puppet_application.activities.scene_edit;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,19 +27,15 @@ public class SceneEditFrame extends JFrame {
     private ProjectOverviewPanel projectPanel;
     private ControlsPanel controlsPanel;
     private List<Entity> entities;
-
+    private int idCounter = 1000;
 
     private void buildTestEntities() {
-        Entity e = new Entity();
-        e.getOrientation().rotate(45 / 180 * Math.PI);
-        double scale = 0.05;
-        e.getOrientation().translate(0, 0);
-        e.getOrientation().scale(scale,scale);
-        BufferedImage img = Util.readImage("./onion.png");
-        System.out.println("Image loaded: " + img);
-        e.setVisualAsset(img);
-        System.out.println("Entity created: " + e.getId());
-        entities.add(e);
+        try {
+            loadEntityFile("./test_entity.e");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public SceneEditFrame() {
@@ -48,7 +49,6 @@ public class SceneEditFrame extends JFrame {
         setBackground(Color.GRAY);
         entities = new ArrayList<>();
 
-        buildTestEntities();
         
         // Internal Container for the screen and control panel
         JPanel container = new JPanel();
@@ -66,10 +66,44 @@ public class SceneEditFrame extends JFrame {
         projectPanel = new ProjectOverviewPanel(this);
         add(projectPanel, BorderLayout.WEST);
 
-  
+        buildTestEntities();
+
     }
 
     public List<Entity> getEntities() {
         return entities;
+    }
+
+    public Entity getSelected() {
+        return screen.getSelected();
+    }
+
+    public void loadEntityFile(String filepath) throws FileNotFoundException {
+        File selectedFile = new File(filepath);
+        FileInputStream fileInputStream = new FileInputStream(selectedFile);
+        Scanner scan = new Scanner(fileInputStream);
+        Entity entity = new Entity();
+        while (scan.hasNextLine()) {
+            String[] fields = scan.nextLine().split(" ");
+            switch (fields[0]) {
+                case "transform" -> {
+                    AffineTransform transform = new AffineTransform(Double.parseDouble(fields[1]), Double.parseDouble(fields[2]), Double.parseDouble(fields[3]), Double.parseDouble(fields[4]), Double.parseDouble(fields[5]), Double.parseDouble(fields[6]));
+                    entity.setOrientation(transform);
+                }
+                case "image" -> {
+                    String path = fields[1];
+                    BufferedImage img = Util.readImage(path);
+                    entity.setVisualAsset(img);
+                }
+                case "animation" -> {
+                }
+                case "connection" -> {
+                }
+            }
+        }
+        scan.close();
+        entity.setId(idCounter++);
+        entities.add(entity);
+        screen.repaint();
     }
 }
