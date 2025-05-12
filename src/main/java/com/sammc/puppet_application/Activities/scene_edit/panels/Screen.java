@@ -15,6 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * JPanel that displays the current state of all objects held in the current scene,
@@ -26,6 +27,8 @@ import java.util.List;
 
 public class Screen extends JPanel implements MouseListener, MouseMotionListener {
     
+    private Logger log = Logger.getLogger(Screen.class.getName());
+
     private SceneEditFrame parent;
     private int[] mouse_pos;
     private Entity selected;
@@ -43,7 +46,6 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         setFocusable(true);
         addMouseListener(this);
         addMouseMotionListener(this);
-        
     }
 
     public Entity getSelected() {
@@ -54,6 +56,7 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     // Main behavior
     @Override
     public void paintComponent(Graphics g) {
+        log.info("Screen paintComponent called");
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
  
@@ -62,6 +65,7 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
 
         // add all entities and components, then render them
         List<Entity> entities = parent.getEntities();
+        log.info(entities.toString());
         renderEntities(buffer, entities);
 
         // draw the buffer to fill the screen
@@ -80,6 +84,7 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         for (Entity e : entities) {
             if (e.getBoundingBox().contains(x, y)) {
                 selected = e;
+                repaint();
                 return;
             }
             
@@ -110,20 +115,24 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
      * @param base_orientation
      */
     private void renderEntity(BufferedImage render_surface, Entity entity, AffineTransform base_orientation) {
-        entity.getOrientation().concatenate(base_orientation);
+        log.info("Rendering entity: " + entity.getId());
+        AffineTransform t = entity.getTransform();
+        t.preConcatenate(base_orientation);
         Graphics2D g = render_surface.createGraphics();
+        
         if (entity.isVisual()) {
-
+            log.info("Visual Asset != null: " + (entity.getVisualAsset() != null));
             if (selected != null && selected.getId() == entity.getId()) {
                 g.setColor(Color.RED);
                 g.drawPolygon(entity.getBoundingBox());
             } 
-
-            g.drawImage(entity.getVisualAsset(), entity.getOrientation(), this);
+            g.setColor(Color.RED);
+            g.drawPolygon(entity.getBoundingBox());
+            g.drawImage(entity.getVisualAsset(), t, this);
         }
 
         for (Connection c : entity.getConnections()) {
-            renderEntity(render_surface, c.getChild(), entity.getOrientation());
+            renderEntity(render_surface, c.getChild(), t);
         }
     }
 
@@ -153,26 +162,14 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         if (selected == null) {
             return;
         }
-        // get the change in position since the last call
-        int dx = e.getX() - mouse_pos[0];
-        int dy = e.getY() - mouse_pos[1];
-        
-        // update mouse position
+    
+        // update mouse position 
         mouse_pos[0] = e.getX();
         mouse_pos[1] = e.getY();
-        
-        selected.getOrientation().getTranslateX();
-        selected.getOrientation().getTranslateY();
 
-        // find the change in position needed to move the entity to the mouse position
-        int corrected_dx, corrected_dy, new_x, new_y;
-        new_x = ((int)e.getX() - (int)(selected.getVisualAsset().getWidth() * selected.getOrientation().getScaleX())/2); // set the new location relative to the mouse activity
-        new_y = ((int)e.getY() - (int) (selected.getVisualAsset().getHeight() * selected.getOrientation().getScaleY())/2); 
-        corrected_dx = (int)(new_x - selected.getOrientation().getTranslateX()); // combine the new position with negative of the current position
-        corrected_dy = (int)(new_y - selected.getOrientation().getTranslateY());
+        selected.setX_offset((int) (e.getX() - (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) / 2));
+        selected.setY_offset((int) (e.getY() - (selected.getVisualAsset().getHeight() * selected.getY_scale() * selected.getUni_scale()) / 2));
 
-
-        selected.getOrientation().translate(corrected_dx, corrected_dy);
         repaint();
     }
 
@@ -209,9 +206,6 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     public void mouseMoved(MouseEvent e) {
    
     }
-
-
-
 
 
 }

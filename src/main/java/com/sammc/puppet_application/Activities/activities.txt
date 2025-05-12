@@ -5,13 +5,11 @@ Main Application Menu
 New Project Popup
 Compile screenshots to video popup
 
-
 Features of the applications:
 	- Run a new or existing session. Manipulate and render active entities and backgrounds
 	- Create entities using some sub activitity where components can be added and configured
 	- adding backgrounds or entities can be done by simply adding them to the project directory.
 	- Turn an output directory into a video, so that scenes can be turned into videos with evenly spaced frames. Any variance in timing should be done in the editing process.
-
 
 MainMenu -> New/Open Project popup -> AnimationFrame(scene editor)
 	|
@@ -19,60 +17,3 @@ MainMenu -> New/Open Project popup -> AnimationFrame(scene editor)
 	|
 	|-----> Convert Image directory to video popup
 
-
-	Old mouse dragged code
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		if (!wasPreviousMouseDraggedCall()) {
-			handleFirstMouseDraggedCall(e);
-		} else {
-			handleLaterMouseDraggedCalls(e);
-		}
-	}
-
-	private boolean wasPreviousMouseDraggedCall() {
-		if (mouseOrgin.getX() == -1 && mouseOrgin.getY() == -1) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	private void handleFirstMouseDraggedCall(MouseEvent e) {
-		CartesianPoint mouseLocation = new CartesianPoint(e.getX(), e.getY());
-		AbstractComponent ac = getElementAt(mouseLocation);
-		if (ac == null) {
-			select(null);
-		} else {
-			select(ac);
-			updateMouseOrgin(e);
-		}
-	}
-
-
-	private void updateMouseOrgin(MouseEvent e) {
-		mouseOrgin = new CartesianPoint(e.getX(), e.getY());
-	}
-
-	private void handleLaterMouseDraggedCalls(MouseEvent e) {
-		CartesianPoint movementSinceLastMouseEvent = getMovementSinceLastMouseEvent(e);
-		updateMouseOrgin(e);
-
-		moveSelectedElement(movementSinceLastMouseEvent);
-	}
-
-	private CartesianPoint getMovementSinceLastMouseEvent(MouseEvent e) {
-		int deltaX = e.getX() - mouseOrgin.getX();
-		int deltaY = e.getY() - mouseOrgin.getY();
-		return new CartesianPoint(deltaX, deltaY);
-	}
-
-	private void moveSelectedElement(CartesianPoint relativeLocation) {
-		int dx = relativeLocation.getX();
-		int dy = relativeLocation.getY();
-		if (hasSelectedComponent()) {
-			moveSelected(dx, dy);
-		}
-		repaint();
-	}

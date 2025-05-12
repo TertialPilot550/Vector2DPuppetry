@@ -18,7 +18,7 @@ import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
 
 public class ProjectOverviewPanel extends JPanel {
 
-    public static final String FILE_ROOT_PATH = "./";
+    public static final String FILE_ROOT_PATH = "./proj";
 
     private SceneEditFrame parent;
     private DefaultMutableTreeNode root;
@@ -55,18 +55,20 @@ public class ProjectOverviewPanel extends JPanel {
         addSelectedEntityFileButton.setPreferredSize(new Dimension(200, 20));
         addSelectedEntityFileButton.addActionListener(e -> {
             // Load the selected entity file
+            if (tree.getSelectionPath() == null) {
+                return;
+            }
+
             String selected_file_path = tree.getSelectionPath().toString();
             selected_file_path = selected_file_path.substring(1, selected_file_path.length() - 1);
             selected_file_path = selected_file_path.replace(", ", "/");
             selected_file_path = selected_file_path.replace(" ", "");
             // Now the file path is correctly formatted
             try {
-                parent.loadEntityFile(selected_file_path);
+                parent.file_io.loadEntityFile(selected_file_path);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
-            
         });
         controlPanel.add(addSelectedEntityFileButton);
 
@@ -88,14 +90,6 @@ public class ProjectOverviewPanel extends JPanel {
         });
         filepathEntryPanel.add(refreshButton);
 
-
-
-
-
-       
-
-
-        
     }
 
     private void createChildren(File fileRoot, DefaultMutableTreeNode node) {

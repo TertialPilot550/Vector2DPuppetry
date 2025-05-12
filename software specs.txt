@@ -4,8 +4,6 @@ Animation
 
 Vector Puppetry
 
-So my version of this won't handle drawing at all. Like not even a little bit so that's not something I have to worry about
-
 
 
 So the vector puppetry will be structured as as follows
@@ -94,7 +92,7 @@ Features of the applications:
 
 
 For now, each entity is completely defined by:
-	- affine transform flat matrix
+	- affine transform related orientation variables
 	- visual Assets
 	- child components/connections
 	- animation files
@@ -106,7 +104,7 @@ to process, scan each line and handle each case
 Start File
 ""
 transform [3, 3, 3, 3, 3, 3]
-asset onion.png
+image onion.png
 
 ""
 EOF
