@@ -41,6 +41,8 @@ public class EntityFileOperations {
         FileInputStream fileInputStream = new FileInputStream(selectedFile);
         Scanner scan = new Scanner(fileInputStream);
         Entity entity = new Entity();
+        entity.setEntityFilePath(filepath);
+
         while (scan.hasNextLine()) {
             String[] fields = scan.nextLine().split(" ");
             switch (fields[0]) {
@@ -69,6 +71,11 @@ public class EntityFileOperations {
         }
         scan.close();
         parent.addEntity(entity);
+    }
+
+    public void saveEntity(Entity selected) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'saveEntity'");
     }
     
 }

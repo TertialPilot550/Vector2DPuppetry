@@ -81,5 +81,9 @@ public class SceneEditFrame extends JFrame {
         entity.setId(idCounter++);
         entities.add(entity);
         screen.repaint();
+    }
+
+    public ControlsPanel getControls() {
+        return controlsPanel;
     }    
 }

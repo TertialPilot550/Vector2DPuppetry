@@ -1,9 +1,6 @@
 - Figure out files part of the screen confidently.
-    - load components from files
     - complex components from files
 
 
-
-- implement control panel with rotate, directional scale, and nudging Translations
 
 - component builder

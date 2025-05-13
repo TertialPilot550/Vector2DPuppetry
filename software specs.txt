@@ -1,9 +1,30 @@
-Drawing
+/*
+* CONTROL PANEL FEATURES:
+* 
+*  - save the selected entity
+*  - save the selected entity as
+*  - delete the selected entity     
+* 
+* Scene overview:
+*  - show all entities in the scene
+* 
+* 
+* 
+*  
+*/
 
-Animation
-
-Vector Puppetry
-
+/*
+* Then the project overview panel
+* 
+* - show file structure (recent saved photos, available entities, sessions)
+* - save session (checkpoint of the current scene at some point in time)
+* 
+* - shortcut to import files
+* - shortcut to create a simple new entity
+* 
+* - load session (load a previous scene)
+* - load entity file (load a previously saved entity)
+*/
 
 
 So the vector puppetry will be structured as as follows

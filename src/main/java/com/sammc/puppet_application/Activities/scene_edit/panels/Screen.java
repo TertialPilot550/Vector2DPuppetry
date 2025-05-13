@@ -56,7 +56,6 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     // Main behavior
     @Override
     public void paintComponent(Graphics g) {
-        log.info("Screen paintComponent called");
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
  
@@ -65,7 +64,6 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
 
         // add all entities and components, then render them
         List<Entity> entities = parent.getEntities();
-        log.info(entities.toString());
         renderEntities(buffer, entities);
 
         // draw the buffer to fill the screen
@@ -84,12 +82,17 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         for (Entity e : entities) {
             if (e.getBoundingBox().contains(x, y)) {
                 selected = e;
-                repaint();
+                parent.getControls().updateFor(e);
+                parent.repaint();
                 return;
             }
             
         }
+
+        // also update the control panel for the selected entity. should have a method in controls panel
+
         selected = null;
+        parent.getControls().updateFor(null);
         repaint();
     }
 
@@ -115,19 +118,15 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
      * @param base_orientation
      */
     private void renderEntity(BufferedImage render_surface, Entity entity, AffineTransform base_orientation) {
-        log.info("Rendering entity: " + entity.getId());
         AffineTransform t = entity.getTransform();
         t.preConcatenate(base_orientation);
         Graphics2D g = render_surface.createGraphics();
         
         if (entity.isVisual()) {
-            log.info("Visual Asset != null: " + (entity.getVisualAsset() != null));
-            if (selected != null && selected.getId() == entity.getId()) {
+            if (selected == entity) {
                 g.setColor(Color.RED);
                 g.drawPolygon(entity.getBoundingBox());
             } 
-            g.setColor(Color.RED);
-            g.drawPolygon(entity.getBoundingBox());
             g.drawImage(entity.getVisualAsset(), t, this);
         }
 

@@ -12,52 +12,13 @@ import java.awt.image.BufferedImage;
 public class Entity {
     
     private int id;
-
-    /*
-     * CONTROL PANEL FEATURES:
-     * 
-     * 
-     * SELECTED ENTITY VALUES: 
-     *  - uni_scale
-     *  - x_scale
-     *  - y_scale
-     *  - x_shear
-     *  - y_shear
-     *  - rotation
-     *  - x_offset
-     *  - y_offset
-     *  - depth
-     * 
-     * - Selected enntity filepath field
-     * - Selected entity visual asset field
-     * 
-     * Scene overview:
-     *  - show all entities in the scene
-     *  - delete the selected entity     
-     *  - save the selected entity
-     *  - save the selected entity as
-     * 
-     *  - shortcut to import files
-     *  - shortcut to create a simple new entity
-     */
-
-    /*
-     * Then the project overview panel
-     * 
-     * - show file structure (recent saved photos, available entities, sessions)
-     * - save session (checkpoint of the current scene at some point in time)
-     * 
-     * - load session (load a previous scene)
-     * - load entity file (load a previously saved entity)
-     */
-
-
+    
     // used to contruct the affine trasform associated with this entity
     private double uni_scale = 1, x_scale = 1, y_scale = 1;
-    private double x_shear, y_shear, rotation, x_offset, y_offset = 0;
+    private double x_shear, y_shear, rotation, x_offset, y_offset, depth = 0;
 
     // visual asset associated with this entity
-    private String entityFilePath = "./proj/Entities/e_" + id + ".e";
+    private String entityFilePath = "./proj/Entities/";
     private String visualAssetPath = "";
     private BufferedImage visualAsset = null;
     private List<Connection> connections = new ArrayList<>();
@@ -213,7 +174,8 @@ public class Entity {
             new Point2D.Double(0, 0), 
             new Point2D.Double(getVisualAsset().getWidth(), 0),
             new Point2D.Double(getVisualAsset().getWidth(), getVisualAsset().getHeight()), 
-            new Point2D.Double(0, getVisualAsset().getHeight()) };
+            new Point2D.Double(0, getVisualAsset().getHeight()) 
+        };
         Point2D[] ep = new Point2D[4];
         // Transform the points
         getTransform().transform(sp, 0, ep, 0, 4);
@@ -227,6 +189,14 @@ public class Entity {
 
     public String getVisualAssetPath() {
         return visualAssetPath;
+    }
+
+    public double getDepth() {
+        return depth;
+    }
+
+    public void setDepth(double depth) {
+        this.depth = depth;
     }
 
 }

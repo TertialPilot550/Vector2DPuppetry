@@ -76,15 +76,15 @@ public class AttributeAdjuster extends JPanel {
     }
 
 
- 
-    /*
-     * Dummy methods to be overridden by anonymous classes
-     */
-
     public void setValue() {
-        // this method should be overridden by the anonymous class,
-        // probably using getValue(), and then setting the value on
-        // the entity equal to that.
+        
+    }
+
+    public void assertValues(double value) {
+        // set the spinner and slider to the same value
+        int intValue = (int) (value * divisor);
+        spinner.setValue(intValue);
+        slider.setValue(intValue);
     }
 
     // allow for double values
