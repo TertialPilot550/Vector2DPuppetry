@@ -1,6 +1,25 @@
 - Figure out files part of the screen confidently.
-    - complex components from files
+    - complex entities from files
 
 
 
-- component builder
+/*
+* Then the project overview panel
+* 
+* - show file structure (recent saved photos, available entities, sessions)
+* !! - save session (checkpoint of the current scene at some point in time)
+* !! - save screen
+* !! - shortcut to import files
+* !! - shortcut to create a simple new entity with a single image
+* !! - Set background from a file
+* 
+* !! - load session (load a previous scene)
+* - load entity file (load a previously saved entity)
+*/
+
+
+/*
+ * Build the complex entity builder
+ */
+
+- entity builder

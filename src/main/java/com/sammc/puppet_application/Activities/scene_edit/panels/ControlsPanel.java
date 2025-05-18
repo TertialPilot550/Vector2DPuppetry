@@ -2,12 +2,11 @@ package com.sammc.puppet_application.activities.scene_edit.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
 import com.sammc.puppet_application.screen_objects.Entity;
@@ -26,7 +25,7 @@ public class ControlsPanel extends JPanel {
     private JTextField image_path_field;
     private JTextField entity_path_field;
     
-    private JList<String> list;
+    private ListPanel list_panel;
 
     public ControlsPanel(SceneEditFrame parent) {
         this.parent = parent;
@@ -151,16 +150,10 @@ public class ControlsPanel extends JPanel {
         };
         entity_overview_panel.setBackground(Color.BLACK);
 
-        list = new JList<String>(); 
+        list_panel = new ListPanel();
+        entity_overview_panel.add(list_panel);
         updateList();
-        System.out.println("List: " + list.getModel().getSize());
-        System.out.println("List: " + list.getModel().getElementAt(0));
 
-        JScrollPane listScroller = new JScrollPane(list);
-        listScroller.setPreferredSize(new Dimension(250, 80));
-        listScroller.add(list);
-        entity_overview_panel.add(listScroller);
-    
         add(entity_overview_panel);
     }
    
@@ -168,18 +161,20 @@ public class ControlsPanel extends JPanel {
     public Dimension getPreferredSize() {
         return new java.awt.Dimension(200, 230);
     }
-
-    private void updateList() {
-        System.out.println("Updating list");
+    
+    public void updateList() {
         Entity[] l = new Entity[parent.getEntities().size()];
-        parent.getEntities().toArray(l);
-        list.setListData(new String[] {"p", "q", "r"});
-        repaint();
+        String[] names = new String[parent.getEntities().size()];
+        for (int i = 0; i < parent.getEntities().size(); i++) {
+            l[i] = parent.getEntities().get(i);
+            names[i] = l[i].getName();
+        }
+        list_panel.updateListData(names);
     }
 
     public void updateFor(Entity e) {
-        updateList();
         if (e == null) {
+            updateList();
             u_scale.assertValues(0);
             x_scale.assertValues(0);
             y_scale.assertValues(0);
@@ -191,6 +186,16 @@ public class ControlsPanel extends JPanel {
             image_path_field.setText("");
             return;
         }
+
+
+        List<String> list_data = list_panel.getListData();
+        for (int i = 0; i < list_data.size(); i++) {
+            if (list_data.get(i).equals(e.getName())) {
+                list_panel.list.setSelectedIndex(i);
+                break;
+            }
+        }
+
         entity_path_field.setText(e.getEntityFilePath());
         image_path_field.setText(e.getVisualAssetPath());
         u_scale.assertValues(e.getUni_scale());

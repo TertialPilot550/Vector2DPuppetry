@@ -199,5 +199,10 @@ public class Entity {
         this.depth = depth;
     }
 
+    public String getName() {
+        String[] split = entityFilePath.split("/");
+        return split[split.length - 1];
+    }
+
 }
 

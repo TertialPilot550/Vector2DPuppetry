@@ -73,6 +73,7 @@ public class SceneEditFrame extends JFrame {
         if (selected != null) {
             file_io.saveEntityFile("" + getName(), selected);
             entities.remove(selected);
+            controlsPanel.updateList();
             screen.repaint();
         }
     }
@@ -80,6 +81,7 @@ public class SceneEditFrame extends JFrame {
     public void addEntity(Entity entity) {
         entity.setId(idCounter++);
         entities.add(entity);
+        controlsPanel.updateList();
         screen.repaint();
     }
 
