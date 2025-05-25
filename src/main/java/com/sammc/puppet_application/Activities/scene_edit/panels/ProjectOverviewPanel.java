@@ -4,32 +4,25 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.ScrollPane;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
+import com.sammc.puppet_application.Util;
 import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
-/*
- * buttons:
 
-import a file
-quick make a simple entity
- */
+import com.sammc.puppet_application.screen_objects.Entity;
 
 public class ProjectOverviewPanel extends JPanel {
 
-    public static final String FILE_ROOT_PATH = "./proj";
-
     private SceneEditFrame parent;
-    private DefaultMutableTreeNode root;
-    private DefaultTreeModel model;
-    private JTree tree;
+    private TreePanel treePanel;
 
     public ProjectOverviewPanel(SceneEditFrame parent) {
         this.parent = parent;
@@ -42,25 +35,12 @@ public class ProjectOverviewPanel extends JPanel {
         controlPanel.setPreferredSize(new Dimension(200, 300));
         add(controlPanel, BorderLayout.NORTH);
 
-        // Set up the scroll pane
-        ScrollPane scroll = new ScrollPane();
-        scroll.setBounds(0, 0, 200, 1600);
-        add(scroll, BorderLayout.CENTER);
-
-        // add the file root to the tree
-        File file_root = new File(FILE_ROOT_PATH);
-        root = new DefaultMutableTreeNode(file_root);
-        model = new DefaultTreeModel(root);
-        tree = new JTree(model);
-        tree.setShowsRootHandles(true);
-        createChildren(file_root, root);
-        scroll.add(tree);
-
-
-
+        // Set up and build tree panel
+        treePanel = new TreePanel(parent);
+        add(treePanel);
 
         /*
-         * Buttons
+         * Build Control Panel
          */
 
         JLabel label0 = new JLabel("Project Overview", JLabel.CENTER);
@@ -72,28 +52,14 @@ public class ProjectOverviewPanel extends JPanel {
         newProject.setPreferredSize(new Dimension(200, 20));
         newProject.addActionListener(e -> {
             // Create a new project
-            // TODO!! FIX THIS
+            new_project();
         });
         controlPanel.add(newProject);
 
         JButton openProject = new JButton("Open Project");
         openProject.setPreferredSize(new Dimension(200, 20));
         openProject.addActionListener(e -> {
-            // Open the selected project
-            if (tree.getSelectionPath() == null) {
-                return;
-            }
-
-            String selected_file_path = tree.getSelectionPath().toString();
-            selected_file_path = selected_file_path.substring(1, selected_file_path.length() - 1);
-            selected_file_path = selected_file_path.replace(", ", "/");
-            selected_file_path = selected_file_path.replace(" ", "");
-            // Now the file path is correctly formatted
-            try {
-                // TODO!! FIX THIS
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            open_project();
         });
         controlPanel.add(openProject);
 
@@ -105,17 +71,10 @@ public class ProjectOverviewPanel extends JPanel {
         loadSession.setPreferredSize(new Dimension(200, 20));
         loadSession.addActionListener(e -> {
             // Load the selected session file
-            if (tree.getSelectionPath() == null) {
-                return;
-            }
-
-            String selected_file_path = tree.getSelectionPath().toString();
-            selected_file_path = selected_file_path.substring(1, selected_file_path.length() - 1);
-            selected_file_path = selected_file_path.replace(", ", "/");
-            selected_file_path = selected_file_path.replace(" ", "");
-            // Now the file path is correctly formatted
             try {
-                // TODO!! FIX THIS
+                String selected_file_path = treePanel.getSelectedPath();
+                if (selected_file_path == null) return;
+                load_session(selected_file_path);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -127,7 +86,7 @@ public class ProjectOverviewPanel extends JPanel {
         saveSession.addActionListener(e -> {
             // Save the current session
             try {
-                // TODO!! FIX THIS
+                save_session();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -144,7 +103,7 @@ public class ProjectOverviewPanel extends JPanel {
         saveScreen.addActionListener(e -> {
             // Save the current screen
             try {
-                // TODO!! FIX THIS
+                save_screen();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -155,15 +114,8 @@ public class ProjectOverviewPanel extends JPanel {
         JButton loadEntity = new JButton("Load Entity File");
         loadEntity.setPreferredSize(new Dimension(200, 20));
         loadEntity.addActionListener(e -> {
-            // Load the selected entity file
-            if (tree.getSelectionPath() == null) {
-                return;
-            }
-
-            String selected_file_path = tree.getSelectionPath().toString();
-            selected_file_path = selected_file_path.substring(1, selected_file_path.length() - 1);
-            selected_file_path = selected_file_path.replace(", ", "/");
-            selected_file_path = selected_file_path.replace(" ", "");
+            String selected_file_path = treePanel.getSelectedPath();
+            if (selected_file_path == null) return;
             // Now the file path is correctly formatted
             try {
                 parent.file_io.loadEntityFile(selected_file_path);
@@ -176,18 +128,12 @@ public class ProjectOverviewPanel extends JPanel {
         JButton loadBackground = new JButton("Load Background");
         loadBackground.setPreferredSize(new Dimension(200, 20));
         loadBackground.addActionListener(e -> {
-            // Load the selected background file
-            if (tree.getSelectionPath() == null) {
-                return;
-            }
-
-            String selected_file_path = tree.getSelectionPath().toString();
-            selected_file_path = selected_file_path.substring(1, selected_file_path.length() - 1);
-            selected_file_path = selected_file_path.replace(", ", "/");
-            selected_file_path = selected_file_path.replace(" ", "");
+            String selected_file_path = treePanel.getSelectedPath();
+            if (selected_file_path == null) return;
             // Now the file path is correctly formatted
             try {
-                // TODO!! Set the background image to the selected file
+                BufferedImage image = Util.readImage(selected_file_path);
+                parent.setBackgroundImage(image, selected_file_path);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -197,44 +143,85 @@ public class ProjectOverviewPanel extends JPanel {
         JButton quickEntity = new JButton("Quick Entity");
         quickEntity.setPreferredSize(new Dimension(200, 20));
         quickEntity.addActionListener(e -> {
-            // Create a new entity with default values
-            // TODO!!
+            String selected_file_path = treePanel.getSelectedPath();
+            if (selected_file_path == null) return;
+            quick_entity(selected_file_path);
         });
         controlPanel.add(quickEntity);
 
     }
 
-    private void createChildren(File fileRoot, DefaultMutableTreeNode node) {
-        File[] files = fileRoot.listFiles();
-        if (files == null) return;
+    // get the project directory path
+    private void quick_entity(String image_path) {
+        BufferedImage image = Util.readImage(image_path);
+        if (image == null) return;
+        Entity entity = new Entity();
+        String entity_dir_path = parent.getProjectRootPath() + "/EntityLibrary";
+        int f_num = Util.getNextAvailableFormattedFileNumber(entity_dir_path, "entity");
+        if (f_num == -1) {
+            System.err.println("Error: Could not find next available file number.");
+            return;
+        }
 
-        for (File file : files) {
-            DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(new FileNode(file));
-            node.add(childNode);
-            if (file.isDirectory()) {
-                createChildren(file, childNode);
-            }
+        entity.setEntityFilePath(entity_dir_path + "/entity_" + f_num + ".e");
+        entity.setVisualAsset(image, image_path);
+        entity.setUni_scale(0.25);
+        parent.addEntity(entity);
+    }
+
+    private void save_screen() {
+        parent.save_screen();
+    }
+
+    private void save_session() {
+        String sessions_path = parent.getProjectRootPath() + "/Sessions";
+        parent.file_io.saveSessionFile(sessions_path + "session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session"));
+    }
+
+    private void load_session(String selected_file_path) {
+        try {
+            parent.file_io.loadSessionFile(selected_file_path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
-    public class FileNode {
+    private void open_project() {
+        File selected_file = null;
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Project Directory");
+        fileChooser.setCurrentDirectory(new File("."));
+        fileChooser.setLocation(200,200);
+        // Set the file chooser to only allow directories
 
-        private File file;
-
-        public FileNode(File file) {
-            this.file = file;
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnValue = fileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selected_file = fileChooser.getSelectedFile();
         }
-
-        @Override
-        public String toString() {
-            String name = file.getName();
-            if (name.equals("")) {
-                return file.getAbsolutePath();
-            } else {
-                return name;
-            }
-        }
+        if (selected_file == null) return;
+        set_current_project_path(selected_file.getAbsolutePath());
     }
 
+    private void new_project() {
+        String name = JOptionPane.showInputDialog("Enter project name: ");
+        set_current_project_path(Util.PROJECTS_DIRECTORY + "/" + name);
+    }
+
+    private void set_current_project_path(String project_path) {    
+        // cleanup
+        parent.clear_session_data();
+        parent.getControls().updateList();
+        parent.repaint();
+
+        // build 
+        Util.buildProjectDirectory(project_path);
+        parent.setProjectRootPath(project_path);
+        treePanel.refresh();
+    }
+
+    public TreePanel getTreePanel() {
+        return treePanel;
+    }
 
 }

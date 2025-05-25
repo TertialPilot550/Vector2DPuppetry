@@ -15,7 +15,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * JPanel that displays the current state of all objects held in the current scene,
@@ -27,11 +26,10 @@ import java.util.logging.Logger;
 
 public class Screen extends JPanel implements MouseListener, MouseMotionListener {
     
-    private Logger log = Logger.getLogger(Screen.class.getName());
-
     private SceneEditFrame parent;
     private int[] mouse_pos;
     private Entity selected;
+    private BufferedImage last_render = null;
 
     /**
      * Constructor for the screen
@@ -51,8 +49,11 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     public Entity getSelected() {
         return selected;
     }
-    
 
+    public BufferedImage getLastRender() {
+        return last_render;
+    }
+    
     // Main behavior
     @Override
     public void paintComponent(Graphics g) {
@@ -68,7 +69,8 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
 
         // draw the buffer to fill the screen
         g2.drawImage(buffer, 0, 0, this);
-
+        last_render = buffer;
+        g2.dispose();
     }
 
     /**
@@ -106,6 +108,14 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
      * @param entities
      */
     private void renderEntities(BufferedImage render_surface, List<Entity> entities) {
+        // Draw background image
+        BufferedImage background_image = parent.getBackgroundImage();
+
+        if (background_image != null) {
+            render_surface.getGraphics().drawImage(background_image, 0, 0, getWidth(), getHeight(), this);
+        }
+
+        // Draw components
         for (Entity e : entities) {
             renderEntity(render_surface, e, new AffineTransform());
         }
@@ -135,10 +145,8 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         }
     }
 
-
-
     /*
-     * MouseListener methods
+     * Mouse - katools
      */
 
     @Override
@@ -154,6 +162,7 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     }
 
     /**
+     * Helper method to handle mouse drag events
      * Handle mouse drag events that occur after the initial click
      * @param e
      */
@@ -205,6 +214,5 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     public void mouseMoved(MouseEvent e) {
    
     }
-
 
 }

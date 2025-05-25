@@ -2,25 +2,26 @@ package com.sammc.puppet_application.activities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 
+import com.sammc.puppet_application.Util;
 import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
 
 public class Application {
 
     public static void main(String[] args) {
+        // Make sure the projects directory exists
+        File projectDir = new File(Util.PROJECTS_DIRECTORY);
+        if (!projectDir.exists()) {
+            projectDir.mkdirs();
+        }
 
-        //selectActivity();
-
+        // Make the actual application
         SceneEditFrame frame = new SceneEditFrame();
-
-
-        
-
-
     }
 
     // Make a JPopup menu that allows the user to either 

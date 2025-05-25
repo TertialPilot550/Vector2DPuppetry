@@ -3,6 +3,7 @@ package com.sammc.puppet_application.activities.scene_edit;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,20 +11,28 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.sammc.puppet_application.Util;
 import com.sammc.puppet_application.activities.scene_edit.panels.ControlsPanel;
 import com.sammc.puppet_application.activities.scene_edit.panels.ProjectOverviewPanel;
 import com.sammc.puppet_application.activities.scene_edit.panels.Screen;
 import com.sammc.puppet_application.screen_objects.Entity;
+// Maybe the background image, as well as the path to the background image, as well as the project directory should be moved to the parent object to make access cleaner.
 
 public class SceneEditFrame extends JFrame {
 
     private Logger log = Logger.getLogger(SceneEditFrame.class.getName());
     
+    // Structural Components
     private Screen screen;
     private ProjectOverviewPanel projectPanel;
     private ControlsPanel controlsPanel;
+    public SceneEditFileIO file_io = new SceneEditFileIO(this);
+
+    // Session Variables
+    private String project_path = ".";
+    private BufferedImage background = null;
+    private String background_path = "";
     private List<Entity> entities;
-    public EntityFileOperations file_io = new EntityFileOperations(this);
     private int idCounter = 1000;
 
     public SceneEditFrame() {
@@ -68,6 +77,20 @@ public class SceneEditFrame extends JFrame {
         return screen.getSelected();
     }
 
+    
+
+    public BufferedImage getBackgroundImage() {
+        return background;
+    }
+
+    public String getBackground_path() {
+        return background_path;
+    }
+
+    public void setBackground_path(String background_path) {
+        this.background_path = background_path;
+    }
+
     public void deleteSelected() {
         Entity selected = screen.getSelected();
         if (selected != null) {
@@ -87,5 +110,38 @@ public class SceneEditFrame extends JFrame {
 
     public ControlsPanel getControls() {
         return controlsPanel;
-    }    
+    }
+
+    public ProjectOverviewPanel getProjectPanel() {
+        return projectPanel;
+    }
+
+    public void setBackgroundImage(BufferedImage image, String filepath) {
+        this.background = image;
+        this.background_path = filepath;
+        screen.repaint();
+    }
+
+    public void save_screen() {
+        BufferedImage img = screen.getLastRender();
+
+        // find the next available file number in the output directory
+        int f_num = Util.getNextAvailableFormattedFileNumber(project_path + "/output", "o");
+
+        Util.saveImage(img, project_path + "/o_" +  f_num + ".png");
+    }
+
+    public void clear_session_data() {
+        setBackgroundImage(null, "");
+        entities.clear();
+        idCounter = 1000;
+    }
+
+    public String getProjectRootPath() {
+        return project_path;
+    }
+
+    public void setProjectRootPath(String project_path) {
+        this.project_path = project_path;
+    }
 }
