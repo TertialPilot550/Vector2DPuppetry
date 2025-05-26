@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
-import com.sammc.puppet_application.screen_objects.Entity;
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
 
 
 public class ControlsPanel extends JPanel {
@@ -110,14 +110,17 @@ public class ControlsPanel extends JPanel {
         };
         JButton save_button = new JButton("Save Entity");
         save_button.addActionListener(e -> {
+            if (parent.hasProjectLoaded() == false) return;
             parent.file_io.saveEntityFile(entity_path_field.getText(), parent.getSelected());
         });
         JButton save_as_button = new JButton("Save Copy");
         save_as_button.addActionListener(e -> {
+            if (parent.hasProjectLoaded() == false) return;
             parent.file_io.saveEntityFile(entity_path_field.getText() + ".copy", parent.getSelected());
         });
         JButton delete_button = new JButton("Delete Entity");
         delete_button.addActionListener(e -> {
+            if (parent.hasProjectLoaded() == false) return;
             parent.deleteSelected();
         });
         save_delete_panel.add(save_button);

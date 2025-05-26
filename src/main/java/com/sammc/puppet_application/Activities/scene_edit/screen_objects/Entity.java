@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.screen_objects;
+package com.sammc.puppet_application.activities.scene_edit.screen_objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Polygon;
@@ -21,7 +21,6 @@ public class Entity {
     private String entityFilePath = "./proj/Entities/";
     private String visualAssetPath = "";
     private BufferedImage visualAsset = null;
-    private List<Connection> connections = new ArrayList<>();
     private List<Animation> definedAnimations = new ArrayList<>(); // ways that this entity can have new arrangements of it's connections
 
     /*
@@ -112,10 +111,6 @@ public class Entity {
         this.visualAssetPath = visualAssetPath;
     }
 
-    public List<Connection> getConnections() {
-        return connections;
-    }
-
     public BufferedImage getVisualAsset() {
         return visualAsset;
     }
@@ -154,12 +149,13 @@ public class Entity {
      * @return List<Entity>
      */
     public List<Entity> getChildren() {
-        List<Entity> acc = new ArrayList<>();
-        for (Connection c : connections) {
-            Entity child = c.getChild();
-            acc.addAll(child.getChildren()); 
-        }
-        return acc;
+        // List<Entity> acc = new ArrayList<>();
+        // for (Connection c : connections) {
+        //     Entity child = c.getChild();
+        //     acc.addAll(child.getChildren()); 
+        // }
+        // return acc;
+        return null;
     }
 
     /**

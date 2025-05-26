@@ -3,8 +3,7 @@ package com.sammc.puppet_application.activities.scene_edit.panels;
 import javax.swing.JPanel;
 
 import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
-import com.sammc.puppet_application.screen_objects.Connection;
-import com.sammc.puppet_application.screen_objects.Entity;
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -59,6 +58,8 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        
  
         // Make a buffer to draw to
         BufferedImage buffer = new BufferedImage(parent.getWidth(), parent.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -66,6 +67,10 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         // add all entities and components, then render them
         List<Entity> entities = parent.getEntities();
         renderEntities(buffer, entities);
+
+        if (!parent.hasProjectLoaded()) {
+            g2.drawString("No Project Currently Loaded", 50, 50);
+        }
 
         // draw the buffer to fill the screen
         g2.drawImage(buffer, 0, 0, this);
@@ -140,8 +145,8 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
             g.drawImage(entity.getVisualAsset(), t, this);
         }
 
-        for (Connection c : entity.getConnections()) {
-            renderEntity(render_surface, c.getChild(), t);
+        for (Entity c : entity.getChildren()) {
+            renderEntity(render_surface, c, t);
         }
     }
 

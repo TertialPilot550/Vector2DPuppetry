@@ -11,12 +11,11 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.sammc.puppet_application.Util;
+import com.sammc.puppet_application.activities.Util;
 import com.sammc.puppet_application.activities.scene_edit.panels.ControlsPanel;
 import com.sammc.puppet_application.activities.scene_edit.panels.ProjectOverviewPanel;
 import com.sammc.puppet_application.activities.scene_edit.panels.Screen;
-import com.sammc.puppet_application.screen_objects.Entity;
-// Maybe the background image, as well as the path to the background image, as well as the project directory should be moved to the parent object to make access cleaner.
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
 
 public class SceneEditFrame extends JFrame {
 
@@ -143,5 +142,9 @@ public class SceneEditFrame extends JFrame {
 
     public void setProjectRootPath(String project_path) {
         this.project_path = project_path;
+    }
+
+    public boolean hasProjectLoaded() {
+        return !project_path.equals(".");
     }
 }

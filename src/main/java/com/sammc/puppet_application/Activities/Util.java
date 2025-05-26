@@ -1,4 +1,4 @@
-package com.sammc.puppet_application;
+package com.sammc.puppet_application.activities;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,7 +10,8 @@ public class Util {
 
     public static final String PROJECTS_DIRECTORY = "./Projects";
 
-    public static void buildProjectDirectory(String project_path) {
+    public static void buildProjectDirectory(String project_name) {
+        String project_path = PROJECTS_DIRECTORY + "/" + project_name;
         File projectDir = new File(project_path);
         if (!projectDir.exists()) {
             projectDir.mkdirs();
@@ -51,7 +52,7 @@ public class Util {
                 continue; // skip files that don't match the prefix format
             }
             String file_name = files[i].split("\\.")[0];
-            int f_num = Integer.parseInt(file_name.substring(file_prefix.length()));
+            int f_num = Integer.parseInt(file_name.substring(file_prefix.length() + 1));
             file_numbers[i] = f_num;
         }
 
@@ -68,8 +69,13 @@ public class Util {
 
     }
 
-    public static void saveImage(BufferedImage img, String project_path) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveImage'");
+    // Save a BufferedImage to a file at the specified filepath in png
+    public static void saveImage(BufferedImage img, String filepath) {
+        File outputFile = new File(filepath);
+        try {
+            ImageIO.write(img, "png", outputFile);
+        } catch (IOException e) {
+           System.err.println("Error saving image: " + e.getMessage());
+        }
     }
 }

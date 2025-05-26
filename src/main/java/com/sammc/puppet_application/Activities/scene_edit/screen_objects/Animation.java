@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.screen_objects;
+package com.sammc.puppet_application.activities.scene_edit.screen_objects;
 
 import java.util.List;
 /**

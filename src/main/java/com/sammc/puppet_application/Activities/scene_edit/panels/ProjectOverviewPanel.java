@@ -14,10 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.sammc.puppet_application.Util;
+import com.sammc.puppet_application.activities.Util;
 import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
-
-import com.sammc.puppet_application.screen_objects.Entity;
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
 
 public class ProjectOverviewPanel extends JPanel {
 
@@ -118,6 +117,7 @@ public class ProjectOverviewPanel extends JPanel {
             if (selected_file_path == null) return;
             // Now the file path is correctly formatted
             try {
+                if (parent.hasProjectLoaded() == false) return;
                 parent.file_io.loadEntityFile(selected_file_path);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -132,6 +132,7 @@ public class ProjectOverviewPanel extends JPanel {
             if (selected_file_path == null) return;
             // Now the file path is correctly formatted
             try {
+                if (parent.hasProjectLoaded() == false) return;
                 BufferedImage image = Util.readImage(selected_file_path);
                 parent.setBackgroundImage(image, selected_file_path);
             } catch (Exception ex) {
@@ -153,6 +154,7 @@ public class ProjectOverviewPanel extends JPanel {
 
     // get the project directory path
     private void quick_entity(String image_path) {
+        if (parent.hasProjectLoaded() == false) return;
         BufferedImage image = Util.readImage(image_path);
         if (image == null) return;
         Entity entity = new Entity();
@@ -170,15 +172,18 @@ public class ProjectOverviewPanel extends JPanel {
     }
 
     private void save_screen() {
+        if (parent.hasProjectLoaded() == false) return;
         parent.save_screen();
     }
 
     private void save_session() {
+        if (parent.hasProjectLoaded() == false) return;
         String sessions_path = parent.getProjectRootPath() + "/Sessions";
-        parent.file_io.saveSessionFile(sessions_path + "session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session"));
+        parent.file_io.saveSessionFile(sessions_path + "/session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session") + ".s");
     }
 
     private void load_session(String selected_file_path) {
+        if (parent.hasProjectLoaded() == false) return;
         try {
             parent.file_io.loadSessionFile(selected_file_path);
         } catch (FileNotFoundException e) {
@@ -205,6 +210,7 @@ public class ProjectOverviewPanel extends JPanel {
 
     private void new_project() {
         String name = JOptionPane.showInputDialog("Enter project name: ");
+        Util.buildProjectDirectory(name);
         set_current_project_path(Util.PROJECTS_DIRECTORY + "/" + name);
     }
 

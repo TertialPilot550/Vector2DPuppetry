@@ -7,9 +7,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Scanner;
 
-import com.sammc.puppet_application.Util;
-import com.sammc.puppet_application.screen_objects.Entity;
+import com.sammc.puppet_application.activities.Util;
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
 
+/**
+ * Compartmentalized file I/O operations for the SceneEditFrame.
+ * 
+ * @author sammc
+ */
 public class SceneEditFileIO {
 
     private SceneEditFrame parent;
@@ -70,7 +75,7 @@ public class SceneEditFileIO {
                 }
                 case "animation" -> {
                 }
-                case "connection" -> {
+                case "child" -> {
                 }
             }
         }
@@ -78,39 +83,53 @@ public class SceneEditFileIO {
         parent.addEntity(entity);
     }
 
-    /*
-     * File Format:
-"""
-id_counter {value}
-background {image path}
-entities {
-    name,
-    name,
-    name,
-    name,
-    name(,)
-}
-"""
+    /**
+     * Load a file that contains the data for a 'session', with a particular name,
+     * set of entities, and optionally a background image.
+     * 
+     * The file format looks like this:
+     * 
+     * """
+     * background <path to image>
+     * entities <entity1> <entity2> <entity3> ...
+     * """
+     * 
+     * @param filepath
+     * @throws FileNotFoundException
      */
-
     public void loadSessionFile(String filepath) throws FileNotFoundException {
+        // Build tools
         File selected_file = new File(filepath);
         FileInputStream fs = new FileInputStream(selected_file);
         Scanner scan = new Scanner(fs);
 
-        // Prepare parent by clearing 
+        // Prepare parent to load the new scene by clearing current session data
         parent.clear_session_data();
 
-        // Read the file data, setting the parent frames session data as needed
-        while (scan.hasNextLine()) {
+        /*
+         * Read the file data, setting the parent frames session data as needed
+         */
+        while (scan.hasNextLine()) { // while the are still lines to be read
+            // Read the line and split it into fields
             String line = scan.nextLine();
             String[] fields = line.split(" ");
-            if (fields[0].equals("background")) {
 
-            } else if (fields[0].equals("entities")) {
+            // Check the first field (command) to determine what to do
+            if (fields[0].equals("background")) { // load the background image
+                // load the background image
+                String path = line.substring(fields[0].length()).trim();
+                BufferedImage img = Util.readImage(path);
+                parent.setBackgroundImage(img, path);
+
+            } else if (fields[0].equals("entities")) { // load the entities
+                /*
+                 * Read all the entity names from the file, build those entity objects, and 
+                 * add them to the parent frame.
+                 */
                 StringBuilder sb = new StringBuilder();
                 sb.append(line.substring(fields[0].length()));
 
+                // Read the rest of the file
                 while (scan.hasNextLine()) {
                     sb.append(scan.nextLine());
                 }
@@ -127,26 +146,29 @@ entities {
         scan.close();
     }
     
+    /**
+     * Save the parent frame's current session data to a file, with the given filepath.
+     * 
+     * @param filepath
+     */
     public void saveSessionFile(String filepath) {
         File selected_file = new File(filepath);
         try {
             FileOutputStream fs = new FileOutputStream(selected_file);
-
             // Construct the information to write to the file
             StringBuilder sb = new StringBuilder();
-            // TODO!
 
-            // TODO: If there is a background, then add that line conditionally
-            // get the background. If the background is not null, add it
-            // also need to add some way to store the path to the background image. 
-
-
-            // Maybe the background image, as well as the path to the background image, as well as the project directory should be moved to the parent object to make access cleaner.
-            BufferedImage background_img = null;
+            // Conditionally set the background image
+            BufferedImage background_img = parent.getBackgroundImage();
             if (background_img != null) {
-                //TODO!!!!
+                sb.append("background " + parent.getBackground_path() + "\n");
             }
 
+            // Add all the entities to the session file
+            sb.append("entities ");
+            for (Entity entity : parent.getEntities()) {
+                sb.append(entity.getEntityFilePath() + " ");
+            }
 
             // Write and Close the file
             fs.write(sb.toString().getBytes());
