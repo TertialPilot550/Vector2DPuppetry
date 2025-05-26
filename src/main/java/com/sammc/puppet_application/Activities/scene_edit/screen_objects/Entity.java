@@ -21,6 +21,7 @@ public class Entity {
     private String entityFilePath = "./proj/Entities/";
     private String visualAssetPath = "";
     private BufferedImage visualAsset = null;
+    private List<Entity> children = new ArrayList<Entity>();
     private List<Animation> definedAnimations = new ArrayList<>(); // ways that this entity can have new arrangements of it's connections
 
     /*
@@ -155,7 +156,7 @@ public class Entity {
         //     acc.addAll(child.getChildren()); 
         // }
         // return acc;
-        return null;
+        return children;
     }
 
     /**

@@ -135,10 +135,13 @@ public class SceneEditFileIO {
                 }
                 
                 // Now sb has the whole list of entities, seperated by whitespace
-                String[] entity_names = sb.toString().split(" ");
+                String[] entity_names = sb.toString().trim().split(" ");
+
                 for (String e_name : entity_names) {
+                    System.out.println(e_name);
                     // For each entity, load the entity.
                     String entity_path = parent.getProjectRootPath() + "/EntityLibrary/" + e_name.trim();
+                    System.out.println(entity_path);
                     loadEntityFile(entity_path);
                 }
             }
@@ -167,7 +170,7 @@ public class SceneEditFileIO {
             // Add all the entities to the session file
             sb.append("entities ");
             for (Entity entity : parent.getEntities()) {
-                sb.append(entity.getEntityFilePath() + " ");
+                sb.append(entity.getName() + " ");
             }
 
             // Write and Close the file

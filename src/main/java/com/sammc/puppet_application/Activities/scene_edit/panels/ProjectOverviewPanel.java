@@ -27,11 +27,11 @@ public class ProjectOverviewPanel extends JPanel {
         this.parent = parent;
         setVisible(true);
         setBackground(Color.GRAY);
-        setPreferredSize(new Dimension(200, 800));
+        setPreferredSize(new Dimension(200, 1000));
         
         // Set up control panel
         JPanel controlPanel = new JPanel();
-        controlPanel.setPreferredSize(new Dimension(200, 300));
+        controlPanel.setPreferredSize(new Dimension(200, 400));
         add(controlPanel, BorderLayout.NORTH);
 
         // Set up and build tree panel
@@ -141,6 +141,13 @@ public class ProjectOverviewPanel extends JPanel {
         });
         controlPanel.add(loadBackground);
 
+        JButton clearBackground = new JButton("Clear Background");
+        clearBackground.setPreferredSize(new Dimension(200, 20));
+        clearBackground.addActionListener(e -> {
+            parent.setBackgroundImage(null, "");
+        });
+        controlPanel.add(clearBackground);
+
         JButton quickEntity = new JButton("Quick Entity");
         quickEntity.setPreferredSize(new Dimension(200, 20));
         quickEntity.addActionListener(e -> {
@@ -150,6 +157,19 @@ public class ProjectOverviewPanel extends JPanel {
         });
         controlPanel.add(quickEntity);
 
+        JButton deleteSelected = new JButton("Delete File");
+        deleteSelected.setPreferredSize(new Dimension(200, 20));
+        deleteSelected.addActionListener(e -> {
+            if (!parent.hasProjectLoaded()) return;
+            String selected_file_path = treePanel.getSelectedPath();
+            if (selected_file_path == null) return;
+            File selected = new File(selected_file_path);
+            if (selected.exists() && !selected.isDirectory()) {
+                selected.delete();
+                treePanel.refresh();
+            } 
+        });
+        controlPanel.add(deleteSelected);
     }
 
     // get the project directory path
@@ -180,6 +200,9 @@ public class ProjectOverviewPanel extends JPanel {
         if (parent.hasProjectLoaded() == false) return;
         String sessions_path = parent.getProjectRootPath() + "/Sessions";
         parent.file_io.saveSessionFile(sessions_path + "/session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session") + ".s");
+        for (Entity e : parent.getEntities()) {
+            parent.file_io.saveEntityFile(e.getEntityFilePath(), e);
+        }
     }
 
     private void load_session(String selected_file_path) {

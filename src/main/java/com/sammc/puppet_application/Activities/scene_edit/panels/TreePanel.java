@@ -46,6 +46,7 @@ public class TreePanel extends JPanel {
      * @return
      */
     public String getSelectedPath() {
+        if (tree.getSelectionPath() == null) return "";
         return tree.getSelectionPath().getLastPathComponent().toString();
         // String selected_file_path = tree.getSelectionPath().toString();
         // System.out.println(selected_file_path);

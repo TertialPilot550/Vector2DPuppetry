@@ -190,7 +190,6 @@ public class ControlsPanel extends JPanel {
             return;
         }
 
-
         List<String> list_data = list_panel.getListData();
         for (int i = 0; i < list_data.size(); i++) {
             if (list_data.get(i).equals(e.getName())) {

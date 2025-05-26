@@ -1,45 +1,10 @@
-Fix adding entities, backgrounds, make sure tree still works after
-changing where the background, background path, and project path are stored.
-
-Finish and test session file operations
-
-sessions:
-
-save and load sessions from file. the necesarry stuff that needs to be saved:
-
-File Format for sessions:
-"""
-background {image path}
-entities 
-    name
-    name
-    name
-    name 
-    name
-
-"""
-
-the load session function should be in the scene edit frame class, and so should the save function. should put it in file_io
-
-- the id_counter value
-- optionally an image to set as the background
-- the list of entity files that should be loaded and added to the screen
-
-
-/*
-* Then the project overview panel
-* Finish implementing button functions
-*/
-
-
 /*
  * Build the complex entity builder
+ *
  * complex entities from files
  */
 
-
 // Add some sort of zoom function to the frame to capture zoomed in shots.
-
 // Compile a video from images.
 
 ANIMATIONS!!
