@@ -1,6 +1,8 @@
 package com.sammc.puppet_application.activities;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
@@ -9,6 +11,13 @@ import javax.imageio.ImageIO;
 public class Util {
 
     public static final String PROJECTS_DIRECTORY = "./Projects";
+
+    public static BufferedImage deepCopy(BufferedImage bi) {
+        ColorModel cm = bi.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bi.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
 
     public static void buildProjectDirectory(String project_name) {
         String project_path = PROJECTS_DIRECTORY + "/" + project_name;

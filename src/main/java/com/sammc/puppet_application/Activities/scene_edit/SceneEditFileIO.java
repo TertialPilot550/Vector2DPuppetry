@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import com.sammc.puppet_application.activities.Util;
 import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapshot;
 
 /**
  * Compartmentalized file I/O operations for the SceneEditFrame.
@@ -80,7 +81,7 @@ public class SceneEditFileIO {
             }
         }
         scan.close();
-        parent.addEntity(entity);
+        parent.getCurrentSnapshot().addEntity(entity);
     }
 
     /**
@@ -160,16 +161,16 @@ public class SceneEditFileIO {
             FileOutputStream fs = new FileOutputStream(selected_file);
             // Construct the information to write to the file
             StringBuilder sb = new StringBuilder();
-
+            Snapshot current = parent.getCurrentSnapshot();
             // Conditionally set the background image
-            BufferedImage background_img = parent.getBackgroundImage();
+            BufferedImage background_img = current.background;
             if (background_img != null) {
                 sb.append("background " + parent.getBackground_path() + "\n");
             }
 
             // Add all the entities to the session file
             sb.append("entities ");
-            for (Entity entity : parent.getEntities()) {
+            for (Entity entity : current.entities) {
                 sb.append(entity.getName() + " ");
             }
 

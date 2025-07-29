@@ -1,6 +1,9 @@
 package com.sammc.puppet_application.activities.scene_edit.screen_objects;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sammc.puppet_application.activities.Util;
+
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -10,9 +13,7 @@ import java.awt.image.BufferedImage;
  * Represent any entity to be displayed on the screen
  */
 public class Entity {
-    
-    private int id;
-    
+        
     // used to contruct the affine trasform associated with this entity
     private double uni_scale = 1, x_scale = 1, y_scale = 1;
     private double x_shear, y_shear, rotation, x_offset, y_offset, depth = 0;
@@ -22,20 +23,29 @@ public class Entity {
     private String visualAssetPath = "";
     private BufferedImage visualAsset = null;
     private List<Entity> children = new ArrayList<Entity>();
-    private List<Animation> definedAnimations = new ArrayList<>(); // ways that this entity can have new arrangements of it's connections
+
+    // does not copy animations or children
+    public Entity clone() {
+        Entity copy = new Entity();
+        copy.uni_scale = uni_scale;
+        copy.x_scale = x_scale;
+        copy.y_scale = y_scale;
+        copy.x_shear = x_shear;
+        copy.y_shear = y_shear;
+        copy.rotation = rotation;
+        copy.x_offset = x_offset;
+        copy.y_offset = y_offset;
+        copy.depth = depth;
+        copy.entityFilePath = entityFilePath;
+        copy.visualAssetPath = visualAssetPath;
+        copy.visualAsset = Util.deepCopy(visualAsset);
+        return copy;
+    }
 
     /*
      * Getters and Setters
      */ 
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    
     public double getUni_scale() {
         return uni_scale;
     }
@@ -121,9 +131,6 @@ public class Entity {
         this.visualAsset = visualAsset;
     }
 
-    public List<Animation> getDefinedAnimations() {
-        return definedAnimations;
-    }
 
     public boolean isVisual() {
         return visualAsset != null;
@@ -150,12 +157,6 @@ public class Entity {
      * @return List<Entity>
      */
     public List<Entity> getChildren() {
-        // List<Entity> acc = new ArrayList<>();
-        // for (Connection c : connections) {
-        //     Entity child = c.getChild();
-        //     acc.addAll(child.getChildren()); 
-        // }
-        // return acc;
         return children;
     }
 
@@ -201,5 +202,18 @@ public class Entity {
         return split[split.length - 1];
     }
 
+    
+
 }
 
+/* 
+    uni_scale = 1, x_scale = 1, y_scale = 1;
+    private double x_shear, y_shear, rotation, x_offset, y_offset, depth = 0;
+
+    // visual asset associated with this entity
+    private String entityFilePath = "./proj/Entities/";
+    private String visualAssetPath = "";
+    private BufferedImage visualAsset = null;
+    private List<Entity> children = new ArrayList<Entity>();
+    private List<Animation> definedAnimations = new ArrayList<>()
+*/

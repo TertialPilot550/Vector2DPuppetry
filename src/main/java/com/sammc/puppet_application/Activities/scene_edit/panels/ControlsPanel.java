@@ -166,10 +166,11 @@ public class ControlsPanel extends JPanel {
     }
     
     public void updateList() {
-        Entity[] l = new Entity[parent.getEntities().size()];
-        String[] names = new String[parent.getEntities().size()];
-        for (int i = 0; i < parent.getEntities().size(); i++) {
-            l[i] = parent.getEntities().get(i);
+        List<Entity> entities = parent.getCurrentSnapshot().entities;
+        Entity[] l = new Entity[entities.size()];
+        String[] names = new String[entities.size()];
+        for (int i = 0; i < entities.size(); i++) {
+            l[i] = entities.get(i);
             names[i] = l[i].getName();
         }
         list_panel.updateListData(names);

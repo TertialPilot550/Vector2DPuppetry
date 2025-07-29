@@ -27,11 +27,11 @@ public class ProjectOverviewPanel extends JPanel {
         this.parent = parent;
         setVisible(true);
         setBackground(Color.GRAY);
-        setPreferredSize(new Dimension(200, 1000));
+        setPreferredSize(new Dimension(300, 1000));
         
         // Set up control panel
         JPanel controlPanel = new JPanel();
-        controlPanel.setPreferredSize(new Dimension(200, 400));
+        controlPanel.setPreferredSize(new Dimension(300, 400));
         add(controlPanel, BorderLayout.NORTH);
 
         // Set up and build tree panel
@@ -134,6 +134,7 @@ public class ProjectOverviewPanel extends JPanel {
             try {
                 if (parent.hasProjectLoaded() == false) return;
                 BufferedImage image = Util.readImage(selected_file_path);
+                System.out.println(selected_file_path);
                 parent.setBackgroundImage(image, selected_file_path);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -188,19 +189,20 @@ public class ProjectOverviewPanel extends JPanel {
         entity.setEntityFilePath(entity_dir_path + "/entity_" + f_num + ".e");
         entity.setVisualAsset(image, image_path);
         entity.setUni_scale(0.25);
-        parent.addEntity(entity);
+        parent.getCurrentSnapshot().addEntity(entity);
     }
 
     private void save_screen() {
         if (parent.hasProjectLoaded() == false) return;
         parent.save_screen();
+        
     }
 
     private void save_session() {
         if (parent.hasProjectLoaded() == false) return;
         String sessions_path = parent.getProjectRootPath() + "/Sessions";
         parent.file_io.saveSessionFile(sessions_path + "/session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session") + ".s");
-        for (Entity e : parent.getEntities()) {
+        for (Entity e : parent.getCurrentSnapshot().entities) {
             parent.file_io.saveEntityFile(e.getEntityFilePath(), e);
         }
     }
@@ -228,7 +230,7 @@ public class ProjectOverviewPanel extends JPanel {
             selected_file = fileChooser.getSelectedFile();
         }
         if (selected_file == null) return;
-        set_current_project_path(selected_file.getAbsolutePath());
+        set_current_project_path("./Projects/" + selected_file.getName());
     }
 
     private void new_project() {

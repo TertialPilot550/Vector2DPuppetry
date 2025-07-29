@@ -29,7 +29,7 @@ public class TreePanel extends JPanel {
         this.parent = parent;
         setVisible(true);
         ScrollPane scroll = new ScrollPane();
-        scroll.setBounds(0, 0, 200, 1600);
+        scroll.setBounds(0, 0, 300, 1600);
         add(scroll);
 
         root = new DefaultMutableTreeNode(new File(parent.getProjectRootPath()));

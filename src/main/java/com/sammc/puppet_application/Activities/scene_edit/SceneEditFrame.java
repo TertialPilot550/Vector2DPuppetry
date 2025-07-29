@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
@@ -16,7 +14,19 @@ import com.sammc.puppet_application.activities.scene_edit.panels.ControlsPanel;
 import com.sammc.puppet_application.activities.scene_edit.panels.ProjectOverviewPanel;
 import com.sammc.puppet_application.activities.scene_edit.panels.Screen;
 import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapshot;
 
+/**
+ * Features that this class takes on
+ * 
+ * hold the screen, controls, project panel, and have an accessible file_io instance,
+ * 
+ * keeps track of sessions information using snapshots
+ * 
+ * master session state changing functions that depend on parts of each component
+ */
+
+// could make a session object that takes care of all the session changing data, and then all the child components could just be passed access to the session data
 public class SceneEditFrame extends JFrame {
 
     private Logger log = Logger.getLogger(SceneEditFrame.class.getName());
@@ -27,12 +37,9 @@ public class SceneEditFrame extends JFrame {
     private ControlsPanel controlsPanel;
     public SceneEditFileIO file_io = new SceneEditFileIO(this);
 
-    // Session Variables
-    private String project_path = ".";
-    private BufferedImage background = null;
-    private String background_path = "";
-    private List<Entity> entities;
-    private int idCounter = 1000;
+    // For onion skinning
+    private Snapshot current;
+    private Snapshot previous;
 
     public SceneEditFrame() {
         log.info("SceneEditFrame constructor called");
@@ -44,21 +51,27 @@ public class SceneEditFrame extends JFrame {
         setLayout(new BorderLayout());
         setVisible(true);
         setBackground(Color.GRAY);
-        entities = new ArrayList<>();
+        current = new Snapshot(this);
+        previous = new Snapshot(this);
         
-        // Internal Container for the screen and control panel
+        // Container for screen and controls
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
+
+        // Screen panel
         screen = new Screen(this);
         screen.setPreferredSize(new Dimension(500, 500));
         container.add(screen, BorderLayout.CENTER);
 
+        // Control panel
         controlsPanel = new ControlsPanel(this);
         controlsPanel.setPreferredSize(new Dimension(400,150));
         container.add(controlsPanel, BorderLayout.SOUTH);
+
+        // Add container
         add(container, BorderLayout.CENTER);
 
-        // project view
+        // Project view
         projectPanel = new ProjectOverviewPanel(this);
         add(projectPanel, BorderLayout.WEST);
 
@@ -68,42 +81,39 @@ public class SceneEditFrame extends JFrame {
      * Interacting with entities
      */
 
-    public List<Entity> getEntities() {
-        return entities;
+    public Snapshot getCurrentSnapshot() {
+        return current;
+    }
+
+    public Snapshot getPreviousSnapshot() {
+        return previous;
     }
 
     public Entity getSelected() {
         return screen.getSelected();
     }
 
-    
-
-    public BufferedImage getBackgroundImage() {
-        return background;
-    }
-
     public String getBackground_path() {
-        return background_path;
+        return current.background_path;
     }
 
     public void setBackground_path(String background_path) {
-        this.background_path = background_path;
+        current.background_path = background_path;
     }
 
     public void deleteSelected() {
         Entity selected = screen.getSelected();
         if (selected != null) {
             file_io.saveEntityFile("" + getName(), selected);
-            entities.remove(selected);
+            current.entities.remove(selected);
             controlsPanel.updateList();
             screen.repaint();
         }
     }
 
-    public void addEntity(Entity entity) {
-        entity.setId(idCounter++);
-        entities.add(entity);
+    public void refresh() {
         controlsPanel.updateList();
+        projectPanel.getTreePanel().refresh();
         screen.repaint();
     }
 
@@ -116,35 +126,38 @@ public class SceneEditFrame extends JFrame {
     }
 
     public void setBackgroundImage(BufferedImage image, String filepath) {
-        this.background = image;
-        this.background_path = filepath;
+        current.background = image;
+        current.background_path = filepath;
         screen.repaint();
     }
 
     public void save_screen() {
+        // get the image that is to be saved
         BufferedImage img = screen.getLastRender();
 
-        // find the next available file number in the output directory
-        int f_num = Util.getNextAvailableFormattedFileNumber(project_path + "/output", "o");
+        // Send the current screen state to the onion layer        
+        previous = new Snapshot(current);
 
-        Util.saveImage(img, project_path + "/o_" +  f_num + ".png");
+        // find the next available file number in the output directory
+        int f_num = Util.getNextAvailableFormattedFileNumber(current.project_path + "/output", "o");
+        Util.saveImage(img, current.project_path + "/Output/o_" +  f_num + ".png");
+        refresh();
     }
 
     public void clear_session_data() {
         setBackgroundImage(null, "");
-        entities.clear();
-        idCounter = 1000;
+        current.entities.clear();
     }
 
     public String getProjectRootPath() {
-        return project_path;
+        return current.project_path;
     }
 
     public void setProjectRootPath(String project_path) {
-        this.project_path = project_path;
+        current.project_path = project_path;
     }
 
     public boolean hasProjectLoaded() {
-        return !project_path.equals(".");
+        return !current.project_path.equals(".");
     }
 }
