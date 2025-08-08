@@ -220,7 +220,7 @@ public class ProjectOverviewPanel extends JPanel {
         File selected_file = null;
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select Project Directory");
-        fileChooser.setCurrentDirectory(new File("."));
+        fileChooser.setCurrentDirectory(new File("./Projects"));
         fileChooser.setLocation(200,200);
         // Set the file chooser to only allow directories
 

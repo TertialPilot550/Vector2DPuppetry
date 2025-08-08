@@ -27,7 +27,7 @@ import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapsho
  */
 
 // could make a session object that takes care of all the session changing data, and then all the child components could just be passed access to the session data
-public class SceneEditFrame extends JFrame {
+public class SceneEditFrame extends SnapshotFrame {
 
     private Logger log = Logger.getLogger(SceneEditFrame.class.getName());
     
@@ -159,5 +159,10 @@ public class SceneEditFrame extends JFrame {
 
     public boolean hasProjectLoaded() {
         return !current.project_path.equals(".");
+    }
+
+    @Override
+    public void updateControls(Entity e) {
+        controlsPanel.updateFor(e);
     }
 }

@@ -1,5 +1,8 @@
 package com.sammc.puppet_application.activities;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -7,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
 
 public class Util {
 
@@ -86,5 +91,35 @@ public class Util {
         } catch (IOException e) {
            System.err.println("Error saving image: " + e.getMessage());
         }
+    }
+
+     /**
+     * Render a single entity to the given graphics context
+     * @param render_surface
+     * @param entity
+     * @param base_orientation
+     */
+    public static void render_entity(Graphics2D g, Entity entity, AffineTransform base_orientation, boolean isGhost) {
+        AffineTransform t = entity.getTransform();
+        t.preConcatenate(base_orientation);
+        
+        // if it's a visual entity, draw it
+        if (entity.isVisual()) {
+            // optionally draw at 50% opacity on the user's view
+            if (isGhost) g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+
+            // the only thing drawn to the program view is actual images, no bounding boxes and no ghosts
+            // while everything, including the image goes on the user view which will actually be drawn to the screen
+            g.drawImage(entity.getVisualAsset(), t, null);
+        
+            // Restore the composite to normal
+            if (isGhost) g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        }
+
+        // render any child entities
+        for (Entity c : entity.getChildren()) {
+            render_entity(g, c, t, isGhost);
+        }
+
     }
 }

@@ -1,14 +1,6 @@
-/* features: 
-
- * zoom, pan the camera around
- 
-This should be applied on a new buffered Image canvas somehow I think? not sure
-
- * Build the complex entity builder
- * complex entities from files
- 
-
- * compile a video from images
+* Build the complex entity builder
+* complex entities from files
+* compile a video from images
 
 
 

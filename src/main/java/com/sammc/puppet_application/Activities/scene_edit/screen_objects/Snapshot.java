@@ -6,7 +6,6 @@ import java.util.List;
 import com.sammc.puppet_application.activities.Util;
 import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
 
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
@@ -22,7 +21,8 @@ public class Snapshot {
     public String project_path = ".";
     public BufferedImage background = null;
     public String background_path = "";
-    public Rectangle camera_bounding_box = null;
+    public float zoom = 1;
+    public int[] camera_pos = {0, 0};
     public List<Entity> entities = new ArrayList<Entity>();
 
     public Snapshot(SceneEditFrame parent) {
@@ -35,7 +35,9 @@ public class Snapshot {
         project_path = toCopy.project_path;
         background = Util.deepCopy(toCopy.background);
         background_path = toCopy.background_path;
-        camera_bounding_box = new Rectangle(toCopy.camera_bounding_box);
+        this.zoom = toCopy.zoom;
+        camera_pos[0] = toCopy.camera_pos[0];
+        camera_pos[1] = toCopy.camera_pos[1];
 
         for (Entity e : toCopy.entities) {
             entities.add(e.clone());
@@ -46,9 +48,5 @@ public class Snapshot {
         entities.add(e);
         parent.refresh();
     }
-
-
-
-
  
 }
