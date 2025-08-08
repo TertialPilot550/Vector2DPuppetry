@@ -16,7 +16,7 @@ import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapsho
  * 
  * @author sammc
  */
-public class SceneEditFileIO {
+public class FileIO {
 
     private SceneEditFrame parent;
 
@@ -24,7 +24,7 @@ public class SceneEditFileIO {
      * File Operations
      */
 
-    public SceneEditFileIO(SceneEditFrame sceneEditFrame) {
+    public FileIO(SceneEditFrame sceneEditFrame) {
         this.parent = sceneEditFrame;
     }
 
@@ -39,6 +39,13 @@ public class SceneEditFileIO {
             StringBuilder sb = new StringBuilder();
             sb.append("transform " + entity.getUni_scale() + " " + entity.getX_scale() + " " + entity.getY_scale() + " " + entity.getX_shear() + " " + entity.getY_shear() + " " + entity.getRotation() + " " + entity.getX_offset() + " " + entity.getY_offset() + "\n");
             sb.append("image " + entity.getVisualAssetPath() + "\n");
+
+            sb.append("children ");
+            for (Entity c : entity.getChildren()) {
+                sb.append(c.getEntityFilePath() + " ");
+                saveEntity(c);
+            }
+
             fileOutputStream.write(sb.toString().getBytes());
             fileOutputStream.close();
             parent.getProjectPanel().getTreePanel().refresh();
@@ -74,9 +81,12 @@ public class SceneEditFileIO {
                     BufferedImage img = Util.readImage(path);
                     entity.setVisualAsset(img, path);
                 }
-                case "animation" -> {
-                }
-                case "child" -> {
+                case "children" -> {
+                    // each field here is going to be the name of another entity in the same project. 
+                    // need to load each entity and then add them as a child once that's something relatively easy to do
+                    for (int i = 1; i < fields.length; i++) {
+                        Entity child = loadEntityFile(fields[i]);
+                    }
                 }
             }
         }

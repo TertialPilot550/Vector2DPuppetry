@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.sammc.puppet_application.activities.Util;
@@ -35,7 +34,7 @@ public class SceneEditFrame extends SnapshotFrame {
     private Screen screen;
     private ProjectOverviewPanel projectPanel;
     private ControlsPanel controlsPanel;
-    public SceneEditFileIO file_io = new SceneEditFileIO(this);
+    public FileIO file_io = new FileIO(this);
 
     // For onion skinning
     private Snapshot current;

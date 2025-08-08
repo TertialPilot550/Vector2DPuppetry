@@ -24,7 +24,7 @@ public class Entity {
     private BufferedImage visualAsset = null;
     private List<Entity> children = new ArrayList<Entity>();
 
-    // does not copy animations or children
+    // deep copy
     public Entity clone() {
         Entity copy = new Entity();
         copy.uni_scale = uni_scale;
@@ -39,6 +39,9 @@ public class Entity {
         copy.entityFilePath = entityFilePath;
         copy.visualAssetPath = visualAssetPath;
         copy.visualAsset = Util.deepCopy(visualAsset);
+        for (Entity c : children) {
+            copy.children.add(c.clone());
+        }
         return copy;
     }
 
@@ -203,17 +206,3 @@ public class Entity {
     }
 
     
-
-}
-
-/* 
-    uni_scale = 1, x_scale = 1, y_scale = 1;
-    private double x_shear, y_shear, rotation, x_offset, y_offset, depth = 0;
-
-    // visual asset associated with this entity
-    private String entityFilePath = "./proj/Entities/";
-    private String visualAssetPath = "";
-    private BufferedImage visualAsset = null;
-    private List<Entity> children = new ArrayList<Entity>();
-    private List<Animation> definedAnimations = new ArrayList<>()
-*/

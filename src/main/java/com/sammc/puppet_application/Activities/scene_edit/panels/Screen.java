@@ -57,6 +57,7 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         setFocusable(true);
         addMouseListener(this);
         addMouseMotionListener(this);
+        parent.refresh();
     }
     
     public Entity getSelected() {
@@ -85,7 +86,7 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         g2.drawImage(user_buffer, 0, 0, this);          // Draw the final buffer to the screen
         last_render = program_buffer;                       // Keep the final program version saved away
 
-        UIManager.paintUI(g2, ((SceneEditFrame) parent).hasProjectLoaded());
+        UIManager.paintUI(g2, parent.hasProjectLoaded());
         g2.dispose();  
     }
 
@@ -139,6 +140,7 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
             Util.render_entity(g_user_view, e, new AffineTransform(), false);
         }
         // Render entites from previous snapshot as ghosts on only the user view
+        if (prev == null) return;
         for (Entity e : prev.entities) {
             Util.render_entity(g_user_view, e, new AffineTransform(), true);
         }

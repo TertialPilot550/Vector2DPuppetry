@@ -11,4 +11,5 @@ public abstract class SnapshotFrame extends JFrame {
     public abstract Snapshot getPreviousSnapshot();
     public abstract boolean hasProjectLoaded();
     public abstract void updateControls(Entity e);
+    public abstract void refresh();
 }

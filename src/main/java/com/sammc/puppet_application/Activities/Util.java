@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 
 import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
 
@@ -58,6 +59,7 @@ public class Util {
 
         String[] files = dir.list();
         if (files == null) return -1;
+        if (files.length == 0) return 0;
 
         // Seperate the file numbers from the file names
         int[] file_numbers = new int[files.length];
@@ -120,6 +122,23 @@ public class Util {
         for (Entity c : entity.getChildren()) {
             render_entity(g, c, t, isGhost);
         }
+
+    }
+
+    public String chooseFile(String path) {
+        File selected_file = null;
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Image File To Use");
+        fileChooser.setCurrentDirectory(new File("./Projects"));
+        fileChooser.setLocation(200,200);
+
+        int returnValue = fileChooser.showOpenDialog(fileChooser);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selected_file = fileChooser.getSelectedFile();
+        }
+
+        if (selected_file == null) return "";
+        return selected_file.getAbsolutePath();
 
     }
 }

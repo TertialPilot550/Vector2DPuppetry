@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
+import com.sammc.puppet_application.activities.scene_edit.SnapshotFrame;
 
 import java.awt.image.BufferedImage;
 
@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
  */
 public class Snapshot {
     
-    private SceneEditFrame parent;
+    private SnapshotFrame parent;
 
     // Session Variables
     public String project_path = ".";
@@ -25,7 +25,7 @@ public class Snapshot {
     public int[] camera_pos = {0, 0};
     public List<Entity> entities = new ArrayList<Entity>();
 
-    public Snapshot(SceneEditFrame parent) {
+    public Snapshot(SnapshotFrame parent) {
         this.parent = parent;
     }
 
