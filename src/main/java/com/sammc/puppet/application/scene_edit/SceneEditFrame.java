@@ -8,12 +8,14 @@ import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
-import com.sammc.puppet.application.FileIO;
 import com.sammc.puppet.application.Util;
-import com.sammc.puppet.application.Screen.Screen;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
-import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
+import com.sammc.puppet.application.scene_edit.panels.ControlsPanel;
+import com.sammc.puppet.application.scene_edit.panels.ProjectOverviewPanel;
+import com.sammc.puppet.application.screen.FileIO;
+import com.sammc.puppet.application.screen.Screen;
+import com.sammc.puppet.application.screen.SnapshotFrame;
+import com.sammc.puppet.application.screen.snapshot.Entity;
+import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 /**
  * Features that this class takes on

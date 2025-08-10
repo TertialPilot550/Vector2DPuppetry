@@ -1,4 +1,4 @@
-package com.sammc.puppet.application.Screen.SnapshotFrame;
+package com.sammc.puppet.application.screen.snapshot;
 import java.util.ArrayList;
 import java.util.List;
 

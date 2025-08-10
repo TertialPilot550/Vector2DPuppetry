@@ -1,4 +1,4 @@
-package com.sammc.puppet.application.scene_edit;
+package com.sammc.puppet.application.scene_edit.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;

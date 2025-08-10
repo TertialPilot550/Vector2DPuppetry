@@ -1,4 +1,4 @@
-package com.sammc.puppet.application.Screen;
+package com.sammc.puppet.application.screen;
 
 
 import java.awt.Color;
@@ -7,8 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
-import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
-import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
+import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 
 public class UIManager {

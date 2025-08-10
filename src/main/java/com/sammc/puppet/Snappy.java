@@ -11,7 +11,7 @@ import javax.swing.JMenuItem;
 import com.sammc.puppet.application.Util;
 import com.sammc.puppet.application.scene_edit.SceneEditFrame;
 
-public class Application {
+public class Snappy {
 
     public static void main(String[] args) {
         // Make sure the projects directory exists

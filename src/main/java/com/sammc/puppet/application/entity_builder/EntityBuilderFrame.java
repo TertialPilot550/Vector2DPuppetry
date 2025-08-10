@@ -9,12 +9,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.sammc.puppet.application.FileIO;
 import com.sammc.puppet.application.Util;
-import com.sammc.puppet.application.Screen.Screen;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
-import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
+import com.sammc.puppet.application.screen.FileIO;
+import com.sammc.puppet.application.screen.Screen;
+import com.sammc.puppet.application.screen.SnapshotFrame;
+import com.sammc.puppet.application.screen.snapshot.Entity;
+import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 public class EntityBuilderFrame extends SnapshotFrame {
     

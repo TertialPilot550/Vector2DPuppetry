@@ -1,4 +1,4 @@
-package com.sammc.puppet.application;
+package com.sammc.puppet.application.screen;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,9 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Scanner;
 
-import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
+import com.sammc.puppet.application.Util;
 import com.sammc.puppet.application.scene_edit.SceneEditFrame;
+import com.sammc.puppet.application.screen.snapshot.Entity;
+import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 /**
  * Compartmentalized file I/O operations for the SceneEditFrame.
@@ -18,7 +19,7 @@ import com.sammc.puppet.application.scene_edit.SceneEditFrame;
  */
 public class FileIO {
 
-    private SceneEditFrame parent;
+    private SnapshotFrame parent;
 
     /*
      * File Operations
@@ -48,7 +49,7 @@ public class FileIO {
 
             fileOutputStream.write(sb.toString().getBytes());
             fileOutputStream.close();
-            parent.getProjectPanel().getTreePanel().refresh();
+            parent.refresh();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -116,7 +117,7 @@ public class FileIO {
         Scanner scan = new Scanner(fs);
 
         // Prepare parent to load the new scene by clearing current session data
-        parent.clear_session_data();
+        parent.getCurrentSnapshot().clear();
 
         /*
          * Read the file data, setting the parent frames session data as needed
@@ -131,7 +132,8 @@ public class FileIO {
                 // load the background image
                 String path = line.substring(fields[0].length()).trim();
                 BufferedImage img = Util.readImage(path);
-                parent.setBackgroundImage(img, path);
+                parent.getCurrentSnapshot().background = img;
+                parent.getCurrentSnapshot().background_path = path;
 
             } else if (fields[0].equals("entities")) { // load the entities
                 /*
@@ -150,10 +152,8 @@ public class FileIO {
                 String[] entity_names = sb.toString().trim().split(" ");
 
                 for (String e_name : entity_names) {
-                    System.out.println(e_name);
                     // For each entity, load the entity.
-                    String entity_path = parent.getProjectRootPath() + "/EntityLibrary/" + e_name.trim();
-                    System.out.println(entity_path);
+                    String entity_path = parent.getCurrentSnapshot().project_path + "/EntityLibrary/" + e_name.trim();
                     loadEntityFile(entity_path);
                 }
             }
@@ -176,7 +176,7 @@ public class FileIO {
             // Conditionally set the background image
             BufferedImage background_img = current.background;
             if (background_img != null) {
-                sb.append("background " + parent.getBackground_path() + "\n");
+                sb.append("background " + parent.getCurrentSnapshot().background_path + "\n");
             }
 
             // Add all the entities to the session file
@@ -190,7 +190,7 @@ public class FileIO {
             fs.close();
 
             // Refresh parent project view panel so the user can see the new file right away
-            parent.getProjectPanel().getTreePanel().refresh();
+            parent.refresh();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

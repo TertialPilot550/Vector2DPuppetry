@@ -1,11 +1,10 @@
-package com.sammc.puppet.application.Screen;
+package com.sammc.puppet.application.screen;
 
 import javax.swing.JPanel;
 
 import com.sammc.puppet.application.Util;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
-import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
+import com.sammc.puppet.application.screen.snapshot.Entity;
+import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 import java.awt.Color;
 import java.awt.Graphics;

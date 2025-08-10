@@ -1,9 +1,10 @@
-package com.sammc.puppet.application.Screen.SnapshotFrame;
+package com.sammc.puppet.application.screen.snapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sammc.puppet.application.Util;
+import com.sammc.puppet.application.screen.SnapshotFrame;
 
 import java.awt.image.BufferedImage;
 
@@ -46,6 +47,15 @@ public class Snapshot {
     public void addEntity(Entity e) {
         entities.add(e);
         parent.refresh();
+    }
+
+    public void clear() {
+        project_path = ".";
+        background = null;
+        background_path = "";
+        zoom = 1;
+        camera_pos = new int[] {0, 0};
+        entities = new ArrayList<Entity>();
     }
  
 }

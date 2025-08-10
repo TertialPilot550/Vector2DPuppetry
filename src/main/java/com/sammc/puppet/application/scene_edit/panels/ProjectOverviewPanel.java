@@ -1,4 +1,4 @@
-package com.sammc.puppet.application.scene_edit;
+package com.sammc.puppet.application.scene_edit.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,7 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sammc.puppet.application.Util;
-import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+import com.sammc.puppet.application.scene_edit.SceneEditFrame;
+import com.sammc.puppet.application.screen.snapshot.Entity;
 
 public class ProjectOverviewPanel extends JPanel {
 

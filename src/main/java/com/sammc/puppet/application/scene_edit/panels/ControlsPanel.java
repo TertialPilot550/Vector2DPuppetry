@@ -1,4 +1,4 @@
-package com.sammc.puppet.application.scene_edit;
+package com.sammc.puppet.application.scene_edit.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,7 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+import com.sammc.puppet.application.scene_edit.SceneEditFrame;
+import com.sammc.puppet.application.screen.snapshot.Entity;
 
 
 
