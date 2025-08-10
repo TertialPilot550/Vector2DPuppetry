@@ -61,7 +61,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
 
                 // add the entity
                 current.entities.add(newEntity);
-                repaint();
+                refresh();
             }
             
         });
@@ -75,6 +75,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
                 Entity ent = current.entities.get(0);
                 FileIO f = new FileIO(null);
                 f.saveEntity(ent);
+                refresh();
             }
             
         });
@@ -88,6 +89,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
                 Entity child = quickLoadNewEntity();
                 child.setX_offset(child.getX_offset() + 200);
                 selected.addChild(child);
+                refresh();
             }
         });
         controls.add(addChildToEntity);
@@ -104,6 +106,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
                     // if it was successfully removed, stop looking
                     if (entity.remove_child(selected)) break;
                 }
+                refresh();
             }
         });
         controls.add(deleteEntity);

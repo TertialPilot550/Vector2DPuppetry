@@ -184,9 +184,10 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
 
         int new_x = e.getX();
         int new_y = e.getY();
-        if (parent == null) {
-            new_x -= (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) / 2;
-            new_y -= (selected.getVisualAsset().getHeight() * selected.getY_scale() * selected.getUni_scale()) / 2;
+        new_x -= (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) / 2;
+        new_y -= (selected.getVisualAsset().getHeight() * selected.getY_scale() * selected.getUni_scale()) / 2;
+        if (selected.getParent() != null) { 
+            new_x -= (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) * 1.25;
         }
 
         selected.setX_offset((int) new_x);

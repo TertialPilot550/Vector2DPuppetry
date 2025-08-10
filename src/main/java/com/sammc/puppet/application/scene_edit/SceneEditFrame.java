@@ -113,9 +113,9 @@ public class SceneEditFrame extends SnapshotFrame {
     }
 
     public void refresh() {
-        controlsPanel.updateList();
-        projectPanel.getTreePanel().refresh();
-        screen.repaint();
+        if (controlsPanel != null) controlsPanel.updateList();
+        if (projectPanel != null) projectPanel.getTreePanel().refresh();
+        if (screen != null) screen.repaint();
     }
 
     public ControlsPanel getControls() {
