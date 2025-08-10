@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities;
+package com.sammc.puppet.application;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -12,7 +12,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+
 
 public class Util {
 

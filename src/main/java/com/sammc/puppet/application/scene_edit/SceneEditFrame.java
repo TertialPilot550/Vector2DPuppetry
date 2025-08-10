@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities.scene_edit;
+package com.sammc.puppet.application.scene_edit;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -8,12 +8,12 @@ import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
-import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.panels.ControlsPanel;
-import com.sammc.puppet_application.activities.scene_edit.panels.ProjectOverviewPanel;
-import com.sammc.puppet_application.activities.scene_edit.panels.Screen;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapshot;
+import com.sammc.puppet.application.FileIO;
+import com.sammc.puppet.application.Util;
+import com.sammc.puppet.application.Screen.Screen;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
+import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
 
 /**
  * Features that this class takes on
@@ -164,4 +164,5 @@ public class SceneEditFrame extends SnapshotFrame {
     public void updateControls(Entity e) {
         controlsPanel.updateFor(e);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities.scene_edit.panels;
+package com.sammc.puppet.application.scene_edit;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,9 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
+import com.sammc.puppet.application.Util;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
 
 public class ProjectOverviewPanel extends JPanel {
 
@@ -118,7 +117,9 @@ public class ProjectOverviewPanel extends JPanel {
             // Now the file path is correctly formatted
             try {
                 if (parent.hasProjectLoaded() == false) return;
-                parent.file_io.loadEntityFile(selected_file_path);
+                Entity new_entity = parent.file_io.loadEntityFile(selected_file_path);
+                parent.getCurrentSnapshot().addEntity(new_entity);
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities.entity_builder;
+package com.sammc.puppet.application.entity_builder;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,12 +9,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.FileIO;
-import com.sammc.puppet_application.activities.scene_edit.SnapshotFrame;
-import com.sammc.puppet_application.activities.scene_edit.panels.Screen;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapshot;
+import com.sammc.puppet.application.FileIO;
+import com.sammc.puppet.application.Util;
+import com.sammc.puppet.application.Screen.Screen;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
+import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
 
 public class EntityBuilderFrame extends SnapshotFrame {
     
@@ -55,18 +55,11 @@ public class EntityBuilderFrame extends SnapshotFrame {
             public void actionPerformed(ActionEvent e) {
                 // clear the current entity
                 current.entities.clear();
-                // open a file chooser, get an image from the project directory
                 
-                // Choose the image to represent the entity
-                Util u = new Util();
-                String image_path = u.chooseFile(project_directory + "/Images");
-                if (image_path == "") return;
+                // get a new entity
+                Entity newEntity = quickLoadNewEntity();
 
-                Entity newEntity = new Entity();
-                newEntity.setVisualAsset(Util.readImage(image_path), image_path);
-                String[] path_fields = image_path.split("Projects/")[1].split("/");
-                String entity_file_path = path_fields[0] + "/EntityLibrary/" + path_fields[path_fields.length-1].split("\\.")[0] + ".e";
-                newEntity.setEntityFilePath(entity_file_path);
+                // add the entity
                 current.entities.add(newEntity);
                 repaint();
             }
@@ -89,40 +82,35 @@ public class EntityBuilderFrame extends SnapshotFrame {
 
         JButton addChildToEntity = new JButton("Add Child");
         addChildToEntity.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO !!
+                Entity selected = screen.getSelected();
+                Entity child = quickLoadNewEntity();
+                child.setX_offset(child.getX_offset() + 200);
+                selected.addChild(child);
             }
-            
         });
         controls.add(addChildToEntity);
 
         JButton deleteEntity = new JButton("Remove Selected");
         deleteEntity.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO !!
+                Entity selected = screen.getSelected();
+                // if it's a top level entity... remove it
+                if (current.entities.contains(selected)) current.entities.remove(selected);
+                // other wise it will be a child so it should be removed 
+                for (Entity entity : current.entities) {
+                    // if it was successfully removed, stop looking
+                    if (entity.remove_child(selected)) break;
+                }
             }
-            
         });
         controls.add(deleteEntity);
 
-        
-
-        
-        
         // should be able to see the project directory, the 
-        
-        
         add(controls, BorderLayout.WEST);
-
-
-
     }
-
-
 
     @Override
     public Snapshot getCurrentSnapshot() {
@@ -141,7 +129,6 @@ public class EntityBuilderFrame extends SnapshotFrame {
 
     @Override
     public void updateControls(Entity e) {
-        
     }
 
     public static void main(String[] args) {
@@ -152,8 +139,23 @@ public class EntityBuilderFrame extends SnapshotFrame {
 
     @Override
     public void refresh() {
-        
+        repaint();
     }
+
+
+    public Entity quickLoadNewEntity() {
+        Util u = new Util();
+        String image_path = u.chooseFile(project_directory + "/Images");
+        if (image_path == "") return null;
+
+        Entity newEntity = new Entity();
+        newEntity.setVisualAsset(Util.readImage(image_path), image_path);
+        String[] path_fields = image_path.split("Projects/")[1].split("/");
+        String entity_file_path = path_fields[0] + "/EntityLibrary/" + path_fields[path_fields.length-1].split("\\.")[0] + ".e";
+        newEntity.setEntityFilePath(entity_file_path);
+        return newEntity;
+    }
+
 
 }
 

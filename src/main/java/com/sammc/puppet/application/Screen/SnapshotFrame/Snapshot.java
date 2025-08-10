@@ -1,10 +1,9 @@
-package com.sammc.puppet_application.activities.scene_edit.screen_objects;
+package com.sammc.puppet.application.Screen.SnapshotFrame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.SnapshotFrame;
+import com.sammc.puppet.application.Util;
 
 import java.awt.image.BufferedImage;
 

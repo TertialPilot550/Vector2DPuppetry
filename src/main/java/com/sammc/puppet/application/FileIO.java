@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities.scene_edit;
+package com.sammc.puppet.application;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,9 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Scanner;
 
-import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapshot;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
+import com.sammc.puppet.application.scene_edit.SceneEditFrame;
 
 /**
  * Compartmentalized file I/O operations for the SceneEditFrame.
@@ -54,7 +54,7 @@ public class FileIO {
         }
     }
 
-    public void loadEntityFile(String filepath) throws FileNotFoundException {
+    public Entity loadEntityFile(String filepath) throws FileNotFoundException {
         File selectedFile = new File(filepath);
         FileInputStream fileInputStream = new FileInputStream(selectedFile);
         Scanner scan = new Scanner(fileInputStream);
@@ -86,12 +86,13 @@ public class FileIO {
                     // need to load each entity and then add them as a child once that's something relatively easy to do
                     for (int i = 1; i < fields.length; i++) {
                         Entity child = loadEntityFile(fields[i]);
+                        entity.getChildren().add(child);
                     }
                 }
             }
         }
         scan.close();
-        parent.getCurrentSnapshot().addEntity(entity);
+        return entity;
     }
 
     /**

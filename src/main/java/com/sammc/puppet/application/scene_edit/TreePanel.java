@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities.scene_edit.panels;
+package com.sammc.puppet.application.scene_edit;
 
 import java.awt.ScrollPane;
 import java.io.File;
@@ -7,8 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-
-import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
 
 /**
  * Container JPanel that displays the project assets and files to the user in the control panel.

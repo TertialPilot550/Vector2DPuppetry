@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities.scene_edit.panels;
+package com.sammc.puppet.application.scene_edit;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,8 +8,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
+
+import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+
 
 
 public class ControlsPanel extends JPanel {

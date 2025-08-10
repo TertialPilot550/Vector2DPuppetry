@@ -1,9 +1,7 @@
-package com.sammc.puppet_application.activities.scene_edit;
+package com.sammc.puppet.application.Screen.SnapshotFrame;
 
 import javax.swing.JFrame;
 
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapshot;
 
 public abstract class SnapshotFrame extends JFrame {
     

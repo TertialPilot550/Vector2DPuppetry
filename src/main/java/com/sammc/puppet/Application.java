@@ -1,4 +1,4 @@
-package com.sammc.puppet_application;
+package com.sammc.puppet;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,8 +8,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 
-import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
+import com.sammc.puppet.application.Util;
+import com.sammc.puppet.application.scene_edit.SceneEditFrame;
 
 public class Application {
 

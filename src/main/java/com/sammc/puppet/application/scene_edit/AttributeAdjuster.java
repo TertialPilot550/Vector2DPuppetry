@@ -1,4 +1,4 @@
-package com.sammc.puppet_application.activities.scene_edit.panels;
+package com.sammc.puppet.application.scene_edit;
 
 
 import java.awt.Dimension;

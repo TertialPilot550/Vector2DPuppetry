@@ -1,8 +1,8 @@
-package com.sammc.puppet_application.activities.scene_edit.screen_objects;
+package com.sammc.puppet.application.Screen.SnapshotFrame;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sammc.puppet_application.activities.Util;
+import com.sammc.puppet.application.Util;
 
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
@@ -11,9 +11,10 @@ import java.awt.image.BufferedImage;
 
 /**
  * Represent any entity to be displayed on the screen
+ * @author sammc
  */
 public class Entity {
-        
+    
     // used to contruct the affine trasform associated with this entity
     private double uni_scale = 1, x_scale = 1, y_scale = 1;
     private double x_shear, y_shear, rotation, x_offset, y_offset, depth = 0;
@@ -22,6 +23,9 @@ public class Entity {
     private String entityFilePath = "./proj/Entities/";
     private String visualAssetPath = "";
     private BufferedImage visualAsset = null;
+    private Entity parent = null;
+
+  
     private List<Entity> children = new ArrayList<Entity>();
 
     // deep copy
@@ -38,9 +42,12 @@ public class Entity {
         copy.depth = depth;
         copy.entityFilePath = entityFilePath;
         copy.visualAssetPath = visualAssetPath;
+        
         copy.visualAsset = Util.deepCopy(visualAsset);
         for (Entity c : children) {
-            copy.children.add(c.clone());
+            Entity new_c = c.clone();
+            new_c.parent = copy;
+            copy.children.add(new_c);
         }
         return copy;
     }
@@ -48,6 +55,55 @@ public class Entity {
     /*
      * Getters and Setters
      */ 
+
+    /**
+     * Returns true if the entity was a child and was removed
+     * @param toRemove
+     * @return
+     */
+    public boolean remove_child(Entity toRemove) {
+        for (Entity e : children) {
+            // if the child is the one to remove, remove it and return true
+            if (e == toRemove) {
+                children.remove(toRemove);
+                return true;
+            }
+            // other wise, check the children of the child. If toRemove is among the child's children, then jon is done return true
+            if (e.remove_child(toRemove)) return false;
+        }
+        return false;
+    }
+
+    
+    /**
+     * Returns null if there is no match, or the child that overlaps with that point. 
+     * 
+     * @param x
+     * @param y
+     * @return 
+     */
+    public Entity getChildAt(int x, int y) {
+        // check each child
+        for (Entity child : children) {
+            // if the point is in the direct child, return the child
+            if (child.getBoundingBox().contains(x, y)) return child;
+            // otherwise check for a match
+            else {
+                Entity match = child.getChildAt(x, y);  // check grandchildren
+                if (match == null) continue;            // if there's no match, continue to the next iteration to try the next child
+                else return match;                      // otherwise return the match
+            }
+        }
+        return null; // fail to find
+    }
+
+    public Entity getParent() {
+        return parent;
+    }
+
+    public void setParent(Entity parent) {
+        this.parent = parent;
+    }
 
     public double getUni_scale() {
         return uni_scale;
@@ -139,6 +195,11 @@ public class Entity {
         return visualAsset != null;
     }
 
+    public void addChild(Entity e) {
+        children.add(e);
+        e.setParent(this);
+    }
+
     /**
      * Returns the affine transform associated with the current values of this entity
      * @return AffineTransform which should be used to render this entity
@@ -152,7 +213,6 @@ public class Entity {
         AffineTransform rotatation_transform = new AffineTransform(Math.cos(Math.toRadians(rotation)), -Math.sin(Math.toRadians(rotation)), Math.sin(Math.toRadians(rotation)), Math.cos(Math.toRadians(rotation)), 0, 0);
         result.concatenate(rotatation_transform);
         return result;
-    
     }
 
     /**
@@ -179,7 +239,9 @@ public class Entity {
         };
         Point2D[] ep = new Point2D[4];
         // Transform the points
-        getTransform().transform(sp, 0, ep, 0, 4);
+        AffineTransform t = getTransform();
+        if (parent != null) t.preConcatenate(parent.getTransform());
+        t.transform(sp, 0, ep, 0, 4);
         // Transform the polygon and return it
         return new Polygon(
             new int[] {(int) ep[0].getX(), (int) ep[1].getX(), (int) ep[2].getX(), (int) ep[3].getX()}, 
@@ -206,3 +268,4 @@ public class Entity {
     }
 
     
+}

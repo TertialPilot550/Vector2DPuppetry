@@ -1,13 +1,11 @@
-package com.sammc.puppet_application.activities.scene_edit.panels;
+package com.sammc.puppet.application.Screen;
 
 import javax.swing.JPanel;
 
-import com.sammc.puppet_application.activities.Util;
-import com.sammc.puppet_application.activities.scene_edit.SceneEditFrame;
-import com.sammc.puppet_application.activities.scene_edit.SnapshotFrame;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Entity;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.Snapshot;
-import com.sammc.puppet_application.activities.scene_edit.screen_objects.UIManager;
+import com.sammc.puppet.application.Util;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Entity;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
+import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -21,10 +19,7 @@ import java.util.List;
 
 
 /**
- * one big issue: add zooming and panning somehow
- * 
- * could just add a zoom function that draws the whole thing larger than the screen, and then pan
- * 
+ * TO DO :
  * change aspect ratio of the screen to always be 1.85x1
  * /
 
@@ -60,14 +55,6 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         parent.refresh();
     }
     
-    public Entity getSelected() {
-        return selected;
-    }
-
-    public BufferedImage getLastRender() {
-        return last_render;
-    }
-    
     /**
      * Main behavior, draw all foreground and background objects
      */
@@ -99,9 +86,21 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
     private void selectEntityAt(int x, int y) {
         List<Entity> entities = parent.getCurrentSnapshot().entities;
         for (Entity e : entities) {
+            // check each entity
             if (e.getBoundingBox().contains(x, y)) {
                 selected = e;
                 parent.updateControls(e);
+                parent.repaint();
+                return;
+            } 
+            // if it doesn't match, check it's children recursively for a match
+            else {
+                Entity match = e.getChildAt(x, y);
+                // if no match found continue
+                if (match == null) continue;
+                // otherwise select the new match
+                selected = match;
+                parent.updateControls(match);
                 parent.repaint();
                 return;
             }
@@ -146,13 +145,21 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         }
     }
 
+    public Entity getSelected() {
+        return selected;
+    }
+
+    public BufferedImage getLastRender() {
+        return last_render;
+    }
+
     /*
      * Mouse - katools
      */
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        boolean was_previous_call = mouse_pos.length == 2 & (mouse_pos[0] != -1 & mouse_pos[1] != -1);
+        boolean was_previous_call = (mouse_pos.length == 2) && (mouse_pos[0] != -1 & mouse_pos[1] != -1);
         if (was_previous_call) {
             handleLaterMouseDrag(e);
         } else {
@@ -176,13 +183,18 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         mouse_pos[0] = e.getX();
         mouse_pos[1] = e.getY();
 
-        selected.setX_offset((int) (e.getX() - (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) / 2));
-        selected.setY_offset((int) (e.getY() - (selected.getVisualAsset().getHeight() * selected.getY_scale() * selected.getUni_scale()) / 2));
+        int new_x = e.getX();
+        int new_y = e.getY();
+        if (parent == null) {
+            new_x -= (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) / 2;
+            new_y -= (selected.getVisualAsset().getHeight() * selected.getY_scale() * selected.getUni_scale()) / 2;
+        }
+
+        selected.setX_offset((int) new_x);
+        selected.setY_offset((int) new_y);
 
         repaint();
     }
-
-    
 
     @Override
     public void mouseClicked(MouseEvent e) {

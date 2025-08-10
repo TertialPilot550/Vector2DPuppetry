@@ -1,4 +1,5 @@
-package com.sammc.puppet_application.activities.scene_edit.screen_objects;
+package com.sammc.puppet.application.Screen;
+
 
 import java.awt.Color;
 import java.awt.Font;
@@ -6,7 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
-import com.sammc.puppet_application.activities.scene_edit.SnapshotFrame;
+import com.sammc.puppet.application.Screen.SnapshotFrame.Snapshot;
+import com.sammc.puppet.application.Screen.SnapshotFrame.SnapshotFrame;
 
 
 public class UIManager {
