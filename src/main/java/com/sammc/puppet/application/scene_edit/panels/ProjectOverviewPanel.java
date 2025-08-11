@@ -3,7 +3,8 @@ package com.sammc.puppet.application.scene_edit.panels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,19 +16,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sammc.puppet.application.Util;
+import com.sammc.puppet.application.entity_builder.EntityBuilderFrame;
 import com.sammc.puppet.application.scene_edit.SceneEditFrame;
+import com.sammc.puppet.application.screen.FileIO;
+import com.sammc.puppet.application.screen.SnapshotFrame;
 import com.sammc.puppet.application.screen.snapshot.Entity;
+import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 public class ProjectOverviewPanel extends JPanel {
 
-    private SceneEditFrame parent;
+    private SnapshotFrame parent;
     private TreePanel treePanel;
 
-    public ProjectOverviewPanel(SceneEditFrame parent) {
+    public ProjectOverviewPanel(SnapshotFrame parent) {
         this.parent = parent;
         setVisible(true);
         setBackground(Color.GRAY);
-        setPreferredSize(new Dimension(300, 1000));
+        setPreferredSize(new Dimension(200, 1000));
         
         // Set up control panel
         JPanel controlPanel = new JPanel();
@@ -42,13 +47,8 @@ public class ProjectOverviewPanel extends JPanel {
          * Build Control Panel
          */
 
-        JLabel label0 = new JLabel("Project Overview", JLabel.CENTER);
-        label0.setPreferredSize(new Dimension(200, 20));
-        label0.setFont(new Font("Arial", Font.BOLD, 16));
-        controlPanel.add(label0);
-
         JButton newProject = new JButton("New Project");
-        newProject.setPreferredSize(new Dimension(200, 20));
+        newProject.setPreferredSize(new Dimension(150, 20));
         newProject.addActionListener(e -> {
             // Create a new project
             new_project();
@@ -56,18 +56,18 @@ public class ProjectOverviewPanel extends JPanel {
         controlPanel.add(newProject);
 
         JButton openProject = new JButton("Open Project");
-        openProject.setPreferredSize(new Dimension(200, 20));
+        openProject.setPreferredSize(new Dimension(150, 20));
         openProject.addActionListener(e -> {
             open_project();
         });
         controlPanel.add(openProject);
 
         JLabel label = new JLabel("Session Control", JLabel.CENTER);
-        label.setPreferredSize(new Dimension(200, 20));
+        label.setPreferredSize(new Dimension(150, 20));
         controlPanel.add(label);
 
         JButton loadSession = new JButton("Load Session");
-        loadSession.setPreferredSize(new Dimension(200, 20));
+        loadSession.setPreferredSize(new Dimension(150, 20));
         loadSession.addActionListener(e -> {
             // Load the selected session file
             try {
@@ -77,11 +77,12 @@ public class ProjectOverviewPanel extends JPanel {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            parent.refresh();
         });
         controlPanel.add(loadSession);
 
         JButton saveSession = new JButton("Save Session");
-        saveSession.setPreferredSize(new Dimension(200, 20));
+        saveSession.setPreferredSize(new Dimension(150, 20));
         saveSession.addActionListener(e -> {
             // Save the current session
             try {
@@ -94,11 +95,11 @@ public class ProjectOverviewPanel extends JPanel {
 
         // Manipulate the scene
         JLabel label2 = new JLabel("Scene Control", JLabel.CENTER);
-        label2.setPreferredSize(new Dimension(200, 20));
+        label2.setPreferredSize(new Dimension(150, 20));
         controlPanel.add(label2);
 
         JButton saveScreen = new JButton("Save Screen");
-        saveScreen.setPreferredSize(new Dimension(200, 20));
+        saveScreen.setPreferredSize(new Dimension(150, 20));
         saveScreen.addActionListener(e -> {
             // Save the current screen
             try {
@@ -111,33 +112,35 @@ public class ProjectOverviewPanel extends JPanel {
 
         // Create the control panel for the project overview
         JButton loadEntity = new JButton("Load Entity File");
-        loadEntity.setPreferredSize(new Dimension(200, 20));
+        loadEntity.setPreferredSize(new Dimension(150, 20));
         loadEntity.addActionListener(e -> {
             String selected_file_path = treePanel.getSelectedPath();
             if (selected_file_path == null) return;
             // Now the file path is correctly formatted
             try {
-                if (parent.hasProjectLoaded() == false) return;
-                Entity new_entity = parent.file_io.loadEntityFile(selected_file_path);
+                if (parent.getCurrentSnapshot().project_path.equals("")) return;
+                FileIO f = new FileIO(parent);
+                Entity new_entity = f.loadEntityFile(selected_file_path);
                 parent.getCurrentSnapshot().addEntity(new_entity);
 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            parent.refresh();
         });
         controlPanel.add(loadEntity);
 
         JButton loadBackground = new JButton("Load Background");
-        loadBackground.setPreferredSize(new Dimension(200, 20));
+        loadBackground.setPreferredSize(new Dimension(150, 20));
         loadBackground.addActionListener(e -> {
             String selected_file_path = treePanel.getSelectedPath();
             if (selected_file_path == null) return;
             // Now the file path is correctly formatted
             try {
-                if (parent.hasProjectLoaded() == false) return;
+                if (parent.getCurrentSnapshot().project_path.equals("")) return;
                 BufferedImage image = Util.readImage(selected_file_path);
-                System.out.println(selected_file_path);
-                parent.setBackgroundImage(image, selected_file_path);
+                parent.getCurrentSnapshot().background = image;
+                parent.getCurrentSnapshot().background_path = selected_file_path;
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -145,14 +148,16 @@ public class ProjectOverviewPanel extends JPanel {
         controlPanel.add(loadBackground);
 
         JButton clearBackground = new JButton("Clear Background");
-        clearBackground.setPreferredSize(new Dimension(200, 20));
+        clearBackground.setPreferredSize(new Dimension(150, 20));
         clearBackground.addActionListener(e -> {
-            parent.setBackgroundImage(null, "");
+            parent.getCurrentSnapshot().background = null;
+            parent.getCurrentSnapshot().background_path = "";
+            parent.refresh();
         });
         controlPanel.add(clearBackground);
 
         JButton quickEntity = new JButton("Quick Entity");
-        quickEntity.setPreferredSize(new Dimension(200, 20));
+        quickEntity.setPreferredSize(new Dimension(150, 20));
         quickEntity.addActionListener(e -> {
             String selected_file_path = treePanel.getSelectedPath();
             if (selected_file_path == null) return;
@@ -161,9 +166,9 @@ public class ProjectOverviewPanel extends JPanel {
         controlPanel.add(quickEntity);
 
         JButton deleteSelected = new JButton("Delete File");
-        deleteSelected.setPreferredSize(new Dimension(200, 20));
+        deleteSelected.setPreferredSize(new Dimension(150, 20));
         deleteSelected.addActionListener(e -> {
-            if (!parent.hasProjectLoaded()) return;
+            if (parent.getCurrentSnapshot().project_path.equals("")) return;
             String selected_file_path = treePanel.getSelectedPath();
             if (selected_file_path == null) return;
             File selected = new File(selected_file_path);
@@ -173,46 +178,77 @@ public class ProjectOverviewPanel extends JPanel {
             } 
         });
         controlPanel.add(deleteSelected);
+
+        JButton entityWizard = new JButton("Entity Wizard");
+        entityWizard.setPreferredSize(new Dimension(150, 20));
+        entityWizard.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // open an entity wizard
+                if (parent.getCurrentSnapshot().project_path.equals(".")) return; // if there is no project loaded, don't do anything
+                EntityBuilderFrame ebf = new EntityBuilderFrame(parent);
+                
+            }
+        });
+        controlPanel.add(entityWizard);
+
+        JButton refresh = new JButton("Refresh");
+        refresh.setPreferredSize(new Dimension(150, 20));
+        refresh.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.refresh();
+            }
+        });
+        controlPanel.add(refresh);
     }
 
     // get the project directory path
     private void quick_entity(String image_path) {
-        if (parent.hasProjectLoaded() == false) return;
+        if (parent.getCurrentSnapshot().project_path.equals("")) return;
         BufferedImage image = Util.readImage(image_path);
         if (image == null) return;
         Entity entity = new Entity();
-        String entity_dir_path = parent.getProjectRootPath() + "/EntityLibrary";
+        String entity_dir_path = parent.getCurrentSnapshot().project_path + "/EntityLibrary";
         int f_num = Util.getNextAvailableFormattedFileNumber(entity_dir_path, "entity");
         if (f_num == -1) {
             System.err.println("Error: Could not find next available file number.");
             return;
         }
 
-        entity.setEntityFilePath(entity_dir_path + "/entity_" + f_num + ".e");
+        entity.setEntityFileName(entity_dir_path + "/entity_" + f_num + ".e");
         entity.setVisualAsset(image, image_path);
         entity.setUni_scale(0.25);
         parent.getCurrentSnapshot().addEntity(entity);
     }
 
-    private void save_screen() {
-        if (parent.hasProjectLoaded() == false) return;
-        parent.save_screen();
-        
+    private void save_screen() throws Exception {
+        try {
+            if (parent.getCurrentSnapshot().project_path.equals("")) return;
+            ((SceneEditFrame) parent).save_screen();
+        } catch (ClassCastException e) {
+            throw new Exception("Save Error, saving not allowed from this type of frame.");
+        }
     }
 
     private void save_session() {
-        if (parent.hasProjectLoaded() == false) return;
-        String sessions_path = parent.getProjectRootPath() + "/Sessions";
-        parent.file_io.saveSessionFile(sessions_path + "/session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session") + ".s");
+        if (parent.getCurrentSnapshot().project_path.equals("")) return;
+        String sessions_path = parent.getCurrentSnapshot() + "/Sessions";
+        FileIO f = new FileIO(parent);
+        f.saveSessionFile(sessions_path + "/session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session") + ".s");
         for (Entity e : parent.getCurrentSnapshot().entities) {
-            parent.file_io.saveEntityFile(e.getEntityFilePath(), e);
+            f.saveEntityFile(e.getEntityFileName(), e);
         }
     }
 
     private void load_session(String selected_file_path) {
-        if (parent.hasProjectLoaded() == false) return;
+        FileIO f = new FileIO(parent);
+        if (parent.getCurrentSnapshot().project_path.equals("")) return;
         try {
-            parent.file_io.loadSessionFile(selected_file_path);
+            f.loadSessionFile(selected_file_path);
+            parent.refresh();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -233,6 +269,7 @@ public class ProjectOverviewPanel extends JPanel {
         }
         if (selected_file == null) return;
         set_current_project_path("./Projects/" + selected_file.getName());
+        parent.refresh();
     }
 
     private void new_project() {
@@ -243,13 +280,15 @@ public class ProjectOverviewPanel extends JPanel {
 
     private void set_current_project_path(String project_path) {    
         // cleanup
-        parent.clear_session_data();
-        parent.getControls().updateList();
-        parent.repaint();
+        Snapshot curr = parent.getCurrentSnapshot();
+        curr.background = null;
+        curr.background_path = "";
+        curr.entities.clear();
+        
 
         // build 
         Util.buildProjectDirectory(project_path);
-        parent.setProjectRootPath(project_path);
+        parent.getCurrentSnapshot().project_path = project_path;
         treePanel.refresh();
     }
 

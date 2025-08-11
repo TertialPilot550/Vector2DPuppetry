@@ -1,7 +1,5 @@
-* Build the complex entity builder
-* complex entities from files
 * compile a video from images
-
+* testing
 
 
 

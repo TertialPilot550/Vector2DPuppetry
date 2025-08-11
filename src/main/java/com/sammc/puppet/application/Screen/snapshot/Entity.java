@@ -1,9 +1,8 @@
 package com.sammc.puppet.application.screen.snapshot;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sammc.puppet.application.Util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -20,15 +19,16 @@ public class Entity {
     private double x_shear, y_shear, rotation, x_offset, y_offset, depth = 0;
 
     // visual asset associated with this entity
-    private String entityFilePath = "./proj/Entities/";
-    private String visualAssetPath = "";
+    private String entityFileName = "";
+    private String visualAssetName = "";
     private BufferedImage visualAsset = null;
     private Entity parent = null;
-
   
     private List<Entity> children = new ArrayList<Entity>();
 
-    // deep copy
+    /**
+     * Return a deep copy of this Entity object. Expensive Method.
+     */
     public Entity clone() {
         Entity copy = new Entity();
         copy.uni_scale = uni_scale;
@@ -40,8 +40,8 @@ public class Entity {
         copy.x_offset = x_offset;
         copy.y_offset = y_offset;
         copy.depth = depth;
-        copy.entityFilePath = entityFilePath;
-        copy.visualAssetPath = visualAssetPath;
+        copy.entityFileName = entityFileName;
+        copy.visualAssetName = visualAssetName;
         
         copy.visualAsset = Util.deepCopy(visualAsset);
         for (Entity c : children) {
@@ -51,10 +51,6 @@ public class Entity {
         }
         return copy;
     }
-
-    /*
-     * Getters and Setters
-     */ 
 
     /**
      * Returns true if the entity was a child and was removed
@@ -169,16 +165,16 @@ public class Entity {
         this.y_offset = y_offset;
     }
 
-    public String getEntityFilePath() {
-        return entityFilePath;
+    public String getEntityFileName() {
+        return entityFileName;
     }
 
-    public void setEntityFilePath(String entityFilePath) {
-        this.entityFilePath = entityFilePath;
+    public void setEntityFileName(String entity_name_field) {
+        this.entityFileName = entity_name_field;
     }
 
-    public void setVisualAssetPath(String visualAssetPath) {
-        this.visualAssetPath = visualAssetPath;
+    public void setVisualAssetName(String visualAssetPath) {
+        this.visualAssetName = visualAssetPath;
     }
 
     public BufferedImage getVisualAsset() {
@@ -186,7 +182,7 @@ public class Entity {
     }
 
     public void setVisualAsset(BufferedImage visualAsset, String visualAssetPath) {
-        this.visualAssetPath = visualAssetPath;
+        this.visualAssetName = visualAssetPath;
         this.visualAsset = visualAsset;
     }
 
@@ -250,8 +246,8 @@ public class Entity {
         );
     }
 
-    public String getVisualAssetPath() {
-        return visualAssetPath;
+    public String getVisualAssetName() {
+        return visualAssetName;
     }
 
     public double getDepth() {
@@ -263,8 +259,12 @@ public class Entity {
     }
 
     public String getName() {
-        String[] split = entityFilePath.split("/");
+        String[] split = entityFileName.split("/");
         return split[split.length - 1];
+    }
+
+    public String toString() {
+        return "";
     }
 
     

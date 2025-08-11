@@ -8,12 +8,11 @@ import java.io.FileOutputStream;
 import java.util.Scanner;
 
 import com.sammc.puppet.application.Util;
-import com.sammc.puppet.application.scene_edit.SceneEditFrame;
 import com.sammc.puppet.application.screen.snapshot.Entity;
 import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 /**
- * Compartmentalized file I/O operations for the SceneEditFrame.
+ * Compartmentalized file I/O operations for a Snapshot Frame.
  * 
  * @author sammc
  */
@@ -25,31 +24,50 @@ public class FileIO {
      * File Operations
      */
 
-    public FileIO(SceneEditFrame sceneEditFrame) {
-        this.parent = sceneEditFrame;
+    public FileIO(SnapshotFrame parent) {
+        this.parent = parent;
     }
 
+    /*
+     * Entity File layout (The order of the lines technically doesn't matter)
+     * 
+     * transform 1.0 1.0 1.0 0.0 0.0 0.0 202.0 44.0
+     * image name.png
+     * children patrick.e 
+     */
+
+    /**
+     * Shortcut for saveEntityFile()
+     * 
+     * @param selected
+     */
     public void saveEntity(Entity selected) {
-        saveEntityFile(selected.getEntityFilePath(), selected);
+        saveEntityFile(parent.getCurrentSnapshot().project_path + "/EntityLibrary/" +  selected.getEntityFileName(), selected);
     }
 
+    /**
+     * Saves the given entity to the given filepath
+     * @param filepath
+     * @param entity
+     */
     public void saveEntityFile(String filepath, Entity entity) {
         File selectedFile = new File(filepath);
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(selectedFile);
             StringBuilder sb = new StringBuilder();
             sb.append("transform " + entity.getUni_scale() + " " + entity.getX_scale() + " " + entity.getY_scale() + " " + entity.getX_shear() + " " + entity.getY_shear() + " " + entity.getRotation() + " " + entity.getX_offset() + " " + entity.getY_offset() + "\n");
-            sb.append("image " + entity.getVisualAssetPath() + "\n");
+            String[] fields = entity.getVisualAssetName().split("/");
+            if (fields.length != 0) sb.append("image " + fields[fields.length - 1] + "\n");
 
             sb.append("children ");
             for (Entity c : entity.getChildren()) {
-                sb.append(c.getEntityFilePath() + " ");
+                sb.append(c.getName() + " ");
                 saveEntity(c);
             }
 
             fileOutputStream.write(sb.toString().getBytes());
             fileOutputStream.close();
-            parent.refresh();
+            if (parent != null) parent.refresh();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,7 +78,7 @@ public class FileIO {
         FileInputStream fileInputStream = new FileInputStream(selectedFile);
         Scanner scan = new Scanner(fileInputStream);
         Entity entity = new Entity();
-        entity.setEntityFilePath(filepath);
+        entity.setEntityFileName(filepath);
 
         while (scan.hasNextLine()) {
             String[] fields = scan.nextLine().split(" ");
@@ -79,15 +97,15 @@ public class FileIO {
                 }
                 case "image" -> {
                     String path = fields[1];
-                    BufferedImage img = Util.readImage(path);
+                    BufferedImage img = Util.readImage( parent.getCurrentSnapshot().project_path + "/Images/" + path);
                     entity.setVisualAsset(img, path);
                 }
                 case "children" -> {
                     // each field here is going to be the name of another entity in the same project. 
                     // need to load each entity and then add them as a child once that's something relatively easy to do
                     for (int i = 1; i < fields.length; i++) {
-                        Entity child = loadEntityFile(fields[i]);
-                        entity.getChildren().add(child);
+                        Entity child = loadEntityFile(parent.getCurrentSnapshot().project_path + "/EntityLibrary/" + fields[i]);
+                        entity.addChild(child);
                     }
                 }
             }
@@ -100,7 +118,7 @@ public class FileIO {
      * Load a file that contains the data for a 'session', with a particular name,
      * set of entities, and optionally a background image.
      * 
-     * The file format looks like this:
+     * The file format looks like this: (the order of backgrounds vs entities technically doesn't matter)
      * 
      * """
      * background <path to image>
@@ -130,7 +148,7 @@ public class FileIO {
             // Check the first field (command) to determine what to do
             if (fields[0].equals("background")) { // load the background image
                 // load the background image
-                String path = line.substring(fields[0].length()).trim();
+                String path = parent.getCurrentSnapshot().project_path + "/Images/" + line.substring(fields[0].length()).trim();
                 BufferedImage img = Util.readImage(path);
                 parent.getCurrentSnapshot().background = img;
                 parent.getCurrentSnapshot().background_path = path;

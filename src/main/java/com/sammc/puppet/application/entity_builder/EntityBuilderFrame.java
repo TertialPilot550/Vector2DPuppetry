@@ -7,7 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.sammc.puppet.application.Util;
 import com.sammc.puppet.application.screen.FileIO;
@@ -20,23 +22,27 @@ public class EntityBuilderFrame extends SnapshotFrame {
     
     private Screen screen;
     private Snapshot current;
-    private String project_directory = "./Projects";
-    
+    private SnapshotFrame parent;
 
-    JPanel controls;
+    private JTextField entity_name_field;
 
-    public EntityBuilderFrame() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    private JPanel controls;
+
+    public EntityBuilderFrame(SnapshotFrame parent) {
         setFocusable(true);
-        setName("Animation Frame");
-        setTitle("Animation Frame");
+        setName("Entity Wizard");
+        setTitle("Entity Wizard");
         setSize(1200, 600);
         setLayout(new BorderLayout());
         setVisible(true);
         setBackground(Color.GRAY);
         current = new Snapshot(this);
+        this.parent = parent;
 
-        String grid_image_path = "./grid.jpg";
+        JLabel entity_name_label = new JLabel("Entity Filename:");
+        entity_name_field = new JTextField("something.e");
+
+        String grid_image_path = "./res/grid.jpg";
         current.background = Util.readImage(grid_image_path);
         current.background_path = grid_image_path;
 
@@ -72,10 +78,12 @@ public class EntityBuilderFrame extends SnapshotFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Entity ent = current.entities.get(0);
-                FileIO f = new FileIO(null);
+                Entity ent = screen.getSelected();
+                ent.setEntityFileName(entity_name_field.getText());
+                FileIO f = new FileIO(parent);
                 f.saveEntity(ent);
                 refresh();
+                parent.refresh();
             }
             
         });
@@ -87,6 +95,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
             public void actionPerformed(ActionEvent e) {
                 Entity selected = screen.getSelected();
                 Entity child = quickLoadNewEntity();
+                child.setEntityFileName(selected.getEntityFileName().split("\\.")[0] + "-" + child.getEntityFileName());
                 child.setX_offset(child.getX_offset() + 200);
                 selected.addChild(child);
                 refresh();
@@ -111,8 +120,13 @@ public class EntityBuilderFrame extends SnapshotFrame {
         });
         controls.add(deleteEntity);
 
+        
+        controls.add(entity_name_label);
+        controls.add(entity_name_field);
+
         // should be able to see the project directory, the 
         add(controls, BorderLayout.WEST);
+        refresh();
     }
 
     @Override
@@ -125,37 +139,30 @@ public class EntityBuilderFrame extends SnapshotFrame {
         return null;
     }
 
-    @Override
-    public boolean hasProjectLoaded() {
-        return true;
-    }
 
     @Override
     public void updateControls(Entity e) {
     }
-
-    public static void main(String[] args) {
-        EntityBuilderFrame b = new EntityBuilderFrame();
-    }
-
-
 
     @Override
     public void refresh() {
         repaint();
     }
 
-
+    /**
+     * Use the util file chooser function to load a quick entity from a file and return it
+     * @return
+     */
     public Entity quickLoadNewEntity() {
         Util u = new Util();
-        String image_path = u.chooseFile(project_directory + "/Images");
+        String image_path = u.chooseFile(parent.getCurrentSnapshot().project_path + "/Images");
         if (image_path == "") return null;
 
         Entity newEntity = new Entity();
         newEntity.setVisualAsset(Util.readImage(image_path), image_path);
-        String[] path_fields = image_path.split("Projects/")[1].split("/");
-        String entity_file_path = path_fields[0] + "/EntityLibrary/" + path_fields[path_fields.length-1].split("\\.")[0] + ".e";
-        newEntity.setEntityFilePath(entity_file_path);
+        String[] path_fields = image_path.split("/");
+        String entity_file_name = path_fields[path_fields.length-1].split("\\.")[0] + ".e";
+        newEntity.setEntityFileName(entity_file_name);
         return newEntity;
     }
 

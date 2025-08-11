@@ -72,7 +72,8 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
         g2.drawImage(user_buffer, 0, 0, this);          // Draw the final buffer to the screen
         last_render = program_buffer;                       // Keep the final program version saved away
 
-        UIManager.paintUI(g2, parent.hasProjectLoaded());
+        boolean project_loaded = !parent.getCurrentSnapshot().project_path.equals("");
+        UIManager.paintUI(g2, project_loaded);
         g2.dispose();  
     }
 
@@ -184,10 +185,15 @@ public class Screen extends JPanel implements MouseListener, MouseMotionListener
 
         int new_x = e.getX();
         int new_y = e.getY();
-        new_x -= (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) / 2;
-        new_y -= (selected.getVisualAsset().getHeight() * selected.getY_scale() * selected.getUni_scale()) / 2;
+
+        int scaled_image_width = (int) (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale());
+        int scaled_image_height = (int) (selected.getVisualAsset().getHeight() * selected.getY_scale() * selected.getUni_scale());
+
+        new_x -= scaled_image_width / 2;
+        new_y -= scaled_image_height / 2;
         if (selected.getParent() != null) { 
-            new_x -= (selected.getVisualAsset().getWidth()  * selected.getX_scale() * selected.getUni_scale()) * 1.25;
+            new_x -= scaled_image_height * .7;
+            new_y -= scaled_image_height * .3;
         }
 
         selected.setX_offset((int) new_x);

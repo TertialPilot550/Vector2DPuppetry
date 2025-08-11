@@ -201,8 +201,8 @@ public class ControlsPanel extends JPanel {
             }
         }
 
-        entity_path_field.setText(e.getEntityFilePath());
-        image_path_field.setText(e.getVisualAssetPath());
+        entity_path_field.setText(e.getEntityFileName());
+        image_path_field.setText(e.getVisualAssetName());
         u_scale.assertValues(e.getUni_scale());
         x_scale.assertValues(e.getX_scale());
         y_scale.assertValues(e.getY_scale());

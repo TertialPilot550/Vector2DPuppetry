@@ -1,2 +1,3 @@
-transform 1.0 1.0 1.0 0.0 0.0 0.0 492.0 120.0
-image /Users/sammc/src/Vector2DPuppetry/./Projects/pro2/Images/finn.png
+transform 1.0 1.0 1.0 0.0 0.0 0.0 264.0 45.0
+image finn.png
+children patrick.e 

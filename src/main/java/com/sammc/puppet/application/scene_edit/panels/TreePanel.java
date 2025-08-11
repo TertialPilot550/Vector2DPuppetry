@@ -8,7 +8,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import com.sammc.puppet.application.scene_edit.SceneEditFrame;
+import com.sammc.puppet.application.screen.SnapshotFrame;
 
 /**
  * Container JPanel that displays the project assets and files to the user in the control panel.
@@ -17,7 +17,7 @@ import com.sammc.puppet.application.scene_edit.SceneEditFrame;
 public class TreePanel extends JPanel {
 
     // Owning instance of the scene editor
-    private SceneEditFrame parent;
+    private SnapshotFrame parent;
 
     // Components of Tree Display
     private DefaultMutableTreeNode root;
@@ -25,20 +25,19 @@ public class TreePanel extends JPanel {
     private JTree tree;
 
     // Constructor
-    public TreePanel(SceneEditFrame parent) {
+    public TreePanel(SnapshotFrame parent) {
         this.parent = parent;
         setVisible(true);
         ScrollPane scroll = new ScrollPane();
         scroll.setBounds(0, 0, 300, 1600);
         add(scroll);
 
-        root = new DefaultMutableTreeNode(new File(parent.getProjectRootPath()));
+        root = new DefaultMutableTreeNode(new File(parent.getCurrentSnapshot().project_path));
         model = new DefaultTreeModel(root);
         tree = new JTree(model);
         tree.setShowsRootHandles(true);
         refresh();
         scroll.add(tree);
-        
     }
     
     /**
@@ -62,7 +61,7 @@ public class TreePanel extends JPanel {
      */
     public void refresh() {
         root.removeAllChildren();
-        File file_root = new File(parent.getProjectRootPath());
+        File file_root = new File(parent.getCurrentSnapshot().project_path);
         createChildren(file_root, root);
         model.reload();
     }

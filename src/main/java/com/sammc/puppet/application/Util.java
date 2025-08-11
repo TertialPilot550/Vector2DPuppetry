@@ -26,8 +26,7 @@ public class Util {
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
-    public static void buildProjectDirectory(String project_name) {
-        String project_path = PROJECTS_DIRECTORY + "/" + project_name;
+    public static void buildProjectDirectory(String project_path) {
         File projectDir = new File(project_path);
         if (!projectDir.exists()) {
             projectDir.mkdirs();
@@ -103,6 +102,8 @@ public class Util {
      * @param base_orientation
      */
     public static void render_entity(Graphics2D g, Entity entity, AffineTransform base_orientation, boolean isGhost) {
+        if (entity == null) return;
+
         AffineTransform t = entity.getTransform();
         t.preConcatenate(base_orientation);
         
@@ -130,7 +131,8 @@ public class Util {
         File selected_file = null;
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select Image File To Use");
-        fileChooser.setCurrentDirectory(new File("./Projects"));
+        System.out.println("HHHHH" + path);
+        fileChooser.setCurrentDirectory(new File(path));
         fileChooser.setLocation(200,200);
 
         int returnValue = fileChooser.showOpenDialog(fileChooser);
