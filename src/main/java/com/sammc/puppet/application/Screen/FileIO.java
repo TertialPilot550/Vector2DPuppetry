@@ -73,6 +73,12 @@ public class FileIO {
         }
     }
 
+    /**
+     * Loads the entity file at the given file path into an entity object and returns it.
+     * @param filepath
+     * @return
+     * @throws FileNotFoundException
+     */
     public Entity loadEntityFile(String filepath) throws FileNotFoundException {
         File selectedFile = new File(filepath);
         FileInputStream fileInputStream = new FileInputStream(selectedFile);

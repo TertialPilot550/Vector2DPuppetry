@@ -18,6 +18,10 @@ import com.sammc.puppet.application.screen.SnapshotFrame;
 import com.sammc.puppet.application.screen.snapshot.Entity;
 import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
+/**
+ * Entity Wizard for building complex entities
+ * @author sammc
+ */
 public class EntityBuilderFrame extends SnapshotFrame {
     
     private Screen screen;
@@ -28,6 +32,10 @@ public class EntityBuilderFrame extends SnapshotFrame {
 
     private JPanel controls;
 
+    /**
+     * Construction Details
+     * @param parent
+     */
     public EntityBuilderFrame(SnapshotFrame parent) {
         setFocusable(true);
         setName("Entity Wizard");
@@ -150,7 +158,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
     }
 
     /**
-     * Use the util file chooser function to load a quick entity from a file and return it
+     * Use the util file chooser function to load a simple entity from an image file and return it as an object
      * @return
      */
     public Entity quickLoadNewEntity() {

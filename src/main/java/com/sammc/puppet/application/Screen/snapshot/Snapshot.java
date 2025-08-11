@@ -25,11 +25,19 @@ public class Snapshot {
     public int[] camera_pos = {0, 0};
     public List<Entity> entities = new ArrayList<Entity>();
 
+    /**
+     * Default constructor that belongs to a snapshot frame
+     * @param parent
+     */
     public Snapshot(SnapshotFrame parent) {
         this.parent = parent;
     }
 
-    // deep copy
+    /**
+     * Copy constructor that creates a deep copy.
+     * Expensive construction.
+     * @param toCopy
+     */
     public Snapshot(Snapshot toCopy) {
         parent = toCopy.parent;
         project_path = toCopy.project_path;
@@ -44,11 +52,17 @@ public class Snapshot {
         }
     }
 
+    /**
+     * Adds an entity to the snapshot
+     */
     public void addEntity(Entity e) {
         entities.add(e);
         parent.refresh();
     }
 
+    /**
+     * Clear the current snapshot
+     */
     public void clear() {
         project_path = ".";
         background = null;

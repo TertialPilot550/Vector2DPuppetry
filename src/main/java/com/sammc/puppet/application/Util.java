@@ -14,11 +14,19 @@ import javax.swing.JFileChooser;
 
 import com.sammc.puppet.application.screen.snapshot.Entity;
 
-
+/**
+ * Project wide static utility functions
+ * @author sammc
+ */
 public class Util {
 
     public static final String PROJECTS_DIRECTORY = "./Projects";
 
+    /**
+     * Returns a new object that is a copy of the provided buffered image.
+     * @param bi
+     * @return
+     */
     public static BufferedImage deepCopy(BufferedImage bi) {
         ColorModel cm = bi.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -26,6 +34,11 @@ public class Util {
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
+    /**
+     * Builds out all required subdirectories of the project specified by the parameter.
+     * project_path should be the base level directory for the user's project
+     * @param project_path
+     */
     public static void buildProjectDirectory(String project_path) {
         File projectDir = new File(project_path);
         if (!projectDir.exists()) {
@@ -41,6 +54,11 @@ public class Util {
         }
     }
 
+    /**
+     * Reads a buffered image object from an image file
+     * @param filePath
+     * @return
+     */
     public static BufferedImage readImage(String filePath) {
         BufferedImage image = null;
         try {
@@ -52,6 +70,14 @@ public class Util {
         return image;
     }
 
+    /**
+     * Utility function for saving files with a numbered format. 
+     * Returns the next available number to use with a given format in the given directory.
+     * {file_prefix}_{number}.blah
+     * @param directory_path
+     * @param file_prefix
+     * @return
+     */
     public static int getNextAvailableFormattedFileNumber(String directory_path, String file_prefix) {
         // each file in the directory is assumed to be of the form file_prefix + _ + i + ".something"
         File dir = new File(directory_path);
@@ -127,11 +153,16 @@ public class Util {
 
     }
 
+    /**
+     * Opens a file chooser at the given path, and returns the user's choice as a path, or "" if 
+     * there was no choice
+     * @param path
+     * @return
+     */
     public String chooseFile(String path) {
         File selected_file = null;
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select Image File To Use");
-        System.out.println("HHHHH" + path);
         fileChooser.setCurrentDirectory(new File(path));
         fileChooser.setLocation(200,200);
 

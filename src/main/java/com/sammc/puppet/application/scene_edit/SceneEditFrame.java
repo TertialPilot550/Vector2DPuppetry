@@ -18,16 +18,10 @@ import com.sammc.puppet.application.screen.snapshot.Entity;
 import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
 /**
- * Features that this class takes on
+ * This class is the JFrame that handles the main application activity, scene editing
  * 
- * hold the screen, controls, project panel, and have an accessible file_io instance,
- * 
- * keeps track of sessions information using snapshots
- * 
- * master session state changing functions that depend on parts of each component
+ * @author sammc
  */
-
-// could make a session object that takes care of all the session changing data, and then all the child components could just be passed access to the session data
 public class SceneEditFrame extends SnapshotFrame {
 
     private Logger log = Logger.getLogger(SceneEditFrame.class.getName());
@@ -38,10 +32,13 @@ public class SceneEditFrame extends SnapshotFrame {
     private ControlsPanel controlsPanel;
     public FileIO file_io = new FileIO(this);
 
-    // For onion skinning
     private Snapshot current;
+    // For onion skinning
     private Snapshot previous;
 
+    /**
+     * Structure
+     */
     public SceneEditFrame() {
         log.info("SceneEditFrame constructor called");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -77,10 +74,6 @@ public class SceneEditFrame extends SnapshotFrame {
         add(projectPanel, BorderLayout.WEST);
 
     }
-
-    /*
-     * Interacting with entities
-     */
 
     public Snapshot getCurrentSnapshot() {
         return current;
@@ -133,6 +126,9 @@ public class SceneEditFrame extends SnapshotFrame {
         screen.repaint();
     }
 
+    /**
+     * Method that saves the current screen contents to an image file in the output folder.
+     */
     public void save_screen() {
         // get the image that is to be saved
         BufferedImage img = screen.getLastRender();
@@ -141,7 +137,7 @@ public class SceneEditFrame extends SnapshotFrame {
         previous = new Snapshot(current);
 
         // find the next available file number in the output directory
-        int f_num = Util.getNextAvailableFormattedFileNumber(current.project_path + "/output", "o");
+        int f_num = Util.getNextAvailableFormattedFileNumber(current.project_path + "/Output", "o");
         Util.saveImage(img, current.project_path + "/Output/o_" +  f_num + ".png");
         refresh();
     }

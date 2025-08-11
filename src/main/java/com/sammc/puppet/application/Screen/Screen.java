@@ -16,13 +16,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-
-/**
- * TO DO :
- * change aspect ratio of the screen to always be 1.85x1
- * /
-
-
 /**
  * JPanel that displays the current state of all objects held in the current scene,
  * based on their associated visual assets and affine transforms. Mouse Handling

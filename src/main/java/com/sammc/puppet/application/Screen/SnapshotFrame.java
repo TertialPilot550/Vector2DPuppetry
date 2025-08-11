@@ -5,7 +5,10 @@ import javax.swing.JFrame;
 import com.sammc.puppet.application.screen.snapshot.Entity;
 import com.sammc.puppet.application.screen.snapshot.Snapshot;
 
-
+/**
+ * Template for a JFrame that contains a screen panel
+ * @author sammc
+ */
 public abstract class SnapshotFrame extends JFrame {
     
     public abstract Snapshot getCurrentSnapshot();
