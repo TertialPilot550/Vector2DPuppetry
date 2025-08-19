@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,6 +34,7 @@ public class ControlsPanel extends JPanel {
         this.parent = parent;
         setVisible(true);
         setBackground(Color.WHITE);
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         
         /*
          * Selected Entity Controls
@@ -134,7 +136,7 @@ public class ControlsPanel extends JPanel {
         JPanel selected_control = new JPanel() {
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(1200, 220);
+                return new Dimension(1000, 200);
             }
         };
         selected_control.setBackground(Color.WHITE);
@@ -150,19 +152,12 @@ public class ControlsPanel extends JPanel {
 
         add(selected_control);
 
-        JPanel entity_overview_panel = new JPanel(){
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(250, 220);
-            }
-        };
-        entity_overview_panel.setBackground(Color.BLACK);
+        
 
         list_panel = new ListPanel();
-        entity_overview_panel.add(list_panel);
+        add(list_panel);
         updateList();
 
-        add(entity_overview_panel);
     }
    
     @Override

@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -17,20 +19,22 @@ public class ListPanel extends JPanel {
 
     public ListPanel() {
         super();
-
+        setBackground(Color.WHITE);
         list = new JList<String>() {
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(200, 200);
+                return new Dimension(220, 200);
             }
         };
         ListModel<String> model = new DefaultListModel<String>();
         list.setModel(model);
+        list.setBorder(BorderFactory.createTitledBorder("Entities"));
 
+        list.setLayout(new BoxLayout(list, BoxLayout.X_AXIS));
         list.setVisible(true);
-        list.setSize(200, 200);
+        list.setSize(220, 200);
         list.setBackground(Color.WHITE);
-        list.setForeground(Color.BLACK);
+        list.setForeground(Color.WHITE);
         add(list);
     }
 

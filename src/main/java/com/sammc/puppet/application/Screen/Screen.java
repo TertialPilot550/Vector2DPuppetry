@@ -35,7 +35,6 @@ public class Screen extends ScreenSkeleton {
         super(parent, aspect_ratio);
         logger.info("Screen Instance Created");
         setVisible(true);
-        setBackground(Color.CYAN);
         setFocusable(true);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -65,7 +64,7 @@ public class Screen extends ScreenSkeleton {
         g2.drawImage(user_buffer, 0, 0, this);          // Draw the final buffer to the screen
         last_render = program_buffer;                       // Keep the final program version saved away
 
-        boolean project_loaded = !parent.getCurrentSnapshot().project_path.equals("");
+        boolean project_loaded = !parent.getCurrentSnapshot().project_path.equals(".");
         UIManager.paintUI(g2, project_loaded);
         g2.dispose();  
     }

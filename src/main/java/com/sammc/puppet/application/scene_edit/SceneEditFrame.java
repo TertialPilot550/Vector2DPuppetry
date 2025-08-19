@@ -58,6 +58,7 @@ public class SceneEditFrame extends SnapshotFrame {
 
         // Control panel
         controlsPanel = new ControlsPanel(this);
+        controlsPanel.setBackground(Color.WHITE);
         controlsPanel.setPreferredSize(new Dimension(400,150));
         container.add(controlsPanel, BorderLayout.SOUTH);
 

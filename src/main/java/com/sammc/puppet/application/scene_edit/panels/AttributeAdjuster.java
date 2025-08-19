@@ -1,6 +1,7 @@
 package com.sammc.puppet.application.scene_edit.panels;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -27,6 +28,7 @@ public class AttributeAdjuster extends JPanel {
         this.divisor = divisor;
         setVisible(true);
         setPreferredSize(new Dimension(200, 100));
+        setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         String title = attribute_name;
