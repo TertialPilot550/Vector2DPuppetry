@@ -1,5 +1,6 @@
 package com.sammc.puppet.application.scene_edit.panels;
 
+import java.awt.Color;
 import java.awt.ScrollPane;
 import java.io.File;
 
@@ -26,10 +27,11 @@ public class TreePanel extends JPanel {
 
     // Constructor
     public TreePanel(SnapshotFrame parent) {
+        setBackground(parent.getBackground());
         this.parent = parent;
         setVisible(true);
         ScrollPane scroll = new ScrollPane();
-        scroll.setBounds(0, 0, 300, 1600);
+        scroll.setBounds(5, 5, 200, 9990);
         add(scroll);
 
         root = new DefaultMutableTreeNode(new File(parent.getCurrentSnapshot().project_path));

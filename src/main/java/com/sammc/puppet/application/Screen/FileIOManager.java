@@ -16,7 +16,7 @@ import com.sammc.puppet.application.screen.snapshot.Snapshot;
  * 
  * @author sammc
  */
-public class FileIO {
+public class FileIOManager {
 
     private SnapshotFrame parent;
 
@@ -24,7 +24,7 @@ public class FileIO {
      * File Operations
      */
 
-    public FileIO(SnapshotFrame parent) {
+    public FileIOManager(SnapshotFrame parent) {
         this.parent = parent;
     }
 

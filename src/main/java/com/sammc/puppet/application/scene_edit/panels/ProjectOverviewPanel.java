@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import com.sammc.puppet.application.Util;
 import com.sammc.puppet.application.entity_builder.EntityBuilderFrame;
 import com.sammc.puppet.application.scene_edit.SceneEditFrame;
-import com.sammc.puppet.application.screen.FileIO;
+import com.sammc.puppet.application.screen.FileIOManager;
 import com.sammc.puppet.application.screen.SnapshotFrame;
 import com.sammc.puppet.application.screen.snapshot.Entity;
 import com.sammc.puppet.application.screen.snapshot.Snapshot;
@@ -31,13 +31,15 @@ public class ProjectOverviewPanel extends JPanel {
     public ProjectOverviewPanel(SnapshotFrame parent) {
         this.parent = parent;
         setVisible(true);
-        setBackground(Color.GRAY);
+        setBackground(Color.WHITE);
         setPreferredSize(new Dimension(200, 1000));
         
         // Set up control panel
         JPanel controlPanel = new JPanel();
         controlPanel.setPreferredSize(new Dimension(300, 400));
+        controlPanel.setBackground(getBackground());
         add(controlPanel, BorderLayout.NORTH);
+
 
         // Set up and build tree panel
         treePanel = new TreePanel(parent);
@@ -46,6 +48,10 @@ public class ProjectOverviewPanel extends JPanel {
         /*
          * Build Control Panel
          */
+
+         JLabel project_control = new JLabel("Project Control", JLabel.CENTER);
+         project_control.setPreferredSize(new Dimension(150, 20));
+         controlPanel.add(project_control);
 
         JButton newProject = new JButton("New Project");
         newProject.setPreferredSize(new Dimension(150, 20));
@@ -119,7 +125,7 @@ public class ProjectOverviewPanel extends JPanel {
             // Now the file path is correctly formatted
             try {
                 if (parent.getCurrentSnapshot().project_path.equals("")) return;
-                FileIO f = new FileIO(parent);
+                FileIOManager f = new FileIOManager(parent);
                 Entity new_entity = f.loadEntityFile(selected_file_path);
                 parent.getCurrentSnapshot().addEntity(new_entity);
 
@@ -236,7 +242,7 @@ public class ProjectOverviewPanel extends JPanel {
     private void save_session() {
         if (parent.getCurrentSnapshot().project_path.equals("")) return;
         String sessions_path = parent.getCurrentSnapshot() + "/Sessions";
-        FileIO f = new FileIO(parent);
+        FileIOManager f = new FileIOManager(parent);
         f.saveSessionFile(sessions_path + "/session_" + Util.getNextAvailableFormattedFileNumber(sessions_path, "session") + ".s");
         for (Entity e : parent.getCurrentSnapshot().entities) {
             f.saveEntityFile(e.getEntityFileName(), e);
@@ -244,7 +250,7 @@ public class ProjectOverviewPanel extends JPanel {
     }
 
     private void load_session(String selected_file_path) {
-        FileIO f = new FileIO(parent);
+        FileIOManager f = new FileIOManager(parent);
         if (parent.getCurrentSnapshot().project_path.equals("")) return;
         try {
             f.loadSessionFile(selected_file_path);
@@ -257,13 +263,14 @@ public class ProjectOverviewPanel extends JPanel {
     private void open_project() {
         File selected_file = null;
         JFileChooser fileChooser = new JFileChooser();
+        
         fileChooser.setDialogTitle("Select Project Directory");
         fileChooser.setCurrentDirectory(new File("./Projects"));
         fileChooser.setLocation(200,200);
         // Set the file chooser to only allow directories
 
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnValue = fileChooser.showOpenDialog(this);
+        int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             selected_file = fileChooser.getSelectedFile();
         }

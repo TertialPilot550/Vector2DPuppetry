@@ -32,7 +32,7 @@ public class ControlsPanel extends JPanel {
     public ControlsPanel(SceneEditFrame parent) {
         this.parent = parent;
         setVisible(true);
-
+        setBackground(Color.WHITE);
         
         /*
          * Selected Entity Controls
@@ -94,6 +94,7 @@ public class ControlsPanel extends JPanel {
                 return new Dimension(300, 80);
             }
         };
+        panel.setBackground(Color.white);
         JLabel image_path_label = new JLabel("Image Path");
         JLabel visual_asset_path_label = new JLabel("         Entity Path");
         image_path_field = new JTextField(10);
@@ -110,6 +111,7 @@ public class ControlsPanel extends JPanel {
                 return new Dimension(300, 80);
             }
         };
+        save_delete_panel.setBackground(Color.WHITE);
         JButton save_button = new JButton("Save Entity");
         save_button.addActionListener(e -> {
             if (parent.hasProjectLoaded() == false) return;
@@ -135,6 +137,7 @@ public class ControlsPanel extends JPanel {
                 return new Dimension(1200, 220);
             }
         };
+        selected_control.setBackground(Color.WHITE);
         selected_control.add(u_scale);
         selected_control.add(x_scale);
         selected_control.add(y_scale);

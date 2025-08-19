@@ -1,4 +1,4 @@
-* fix the aspect ratio on the screen panel
+* fix the 1.85x1 aspect ratio on the screen panel
 * testing
 
 

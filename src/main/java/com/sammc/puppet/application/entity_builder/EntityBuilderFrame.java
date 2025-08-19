@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.sammc.puppet.application.Util;
-import com.sammc.puppet.application.screen.FileIO;
+import com.sammc.puppet.application.screen.FileIOManager;
 import com.sammc.puppet.application.screen.Screen;
 import com.sammc.puppet.application.screen.SnapshotFrame;
 import com.sammc.puppet.application.screen.snapshot.Entity;
@@ -24,7 +24,6 @@ import com.sammc.puppet.application.screen.snapshot.Snapshot;
  */
 public class EntityBuilderFrame extends SnapshotFrame {
     
-    private Screen screen;
     private Snapshot current;
     private SnapshotFrame parent;
 
@@ -54,8 +53,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
         current.background = Util.readImage(grid_image_path);
         current.background_path = grid_image_path;
 
-        screen = new Screen(this);
-        screen.setPreferredSize(new Dimension(500, 500));
+        screen = new Screen(this, Screen.DEFAULT_ASPECT_RATIO);
         add(screen, BorderLayout.CENTER);
 
         controls = new JPanel();
@@ -88,7 +86,7 @@ public class EntityBuilderFrame extends SnapshotFrame {
             public void actionPerformed(ActionEvent e) {
                 Entity ent = screen.getSelected();
                 ent.setEntityFileName(entity_name_field.getText());
-                FileIO f = new FileIO(parent);
+                FileIOManager f = new FileIOManager(parent);
                 f.saveEntity(ent);
                 refresh();
                 parent.refresh();

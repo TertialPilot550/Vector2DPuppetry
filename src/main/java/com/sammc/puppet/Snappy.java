@@ -20,7 +20,7 @@ public class Snappy {
         }
 
         // Make the actual application
-        SceneEditFrame frame = new SceneEditFrame();
+        new SceneEditFrame();
     }
 
 

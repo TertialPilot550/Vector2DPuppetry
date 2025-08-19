@@ -29,7 +29,7 @@ public class ListPanel extends JPanel {
 
         list.setVisible(true);
         list.setSize(200, 200);
-        list.setBackground(Color.LIGHT_GRAY);
+        list.setBackground(Color.WHITE);
         list.setForeground(Color.BLACK);
         add(list);
     }

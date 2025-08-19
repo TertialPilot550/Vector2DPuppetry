@@ -4,14 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
 import com.sammc.puppet.application.Util;
 import com.sammc.puppet.application.scene_edit.panels.ControlsPanel;
 import com.sammc.puppet.application.scene_edit.panels.ProjectOverviewPanel;
-import com.sammc.puppet.application.screen.FileIO;
+import com.sammc.puppet.application.screen.FileIOManager;
 import com.sammc.puppet.application.screen.Screen;
 import com.sammc.puppet.application.screen.SnapshotFrame;
 import com.sammc.puppet.application.screen.snapshot.Entity;
@@ -23,14 +22,11 @@ import com.sammc.puppet.application.screen.snapshot.Snapshot;
  * @author sammc
  */
 public class SceneEditFrame extends SnapshotFrame {
-
-    private Logger log = Logger.getLogger(SceneEditFrame.class.getName());
     
     // Structural Components
-    private Screen screen;
     private ProjectOverviewPanel projectPanel;
     private ControlsPanel controlsPanel;
-    public FileIO file_io = new FileIO(this);
+    public FileIOManager file_io = new FileIOManager(this);
 
     private Snapshot current;
     // For onion skinning
@@ -40,25 +36,24 @@ public class SceneEditFrame extends SnapshotFrame {
      * Structure
      */
     public SceneEditFrame() {
-        log.info("SceneEditFrame constructor called");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setFocusable(true);
-        setName("Animation Frame");
-        setTitle("Animation Frame");
+        setName("Snappy");
+        setTitle("Snappy");
         setSize(1200, 800);
         setLayout(new BorderLayout());
         setVisible(true);
-        setBackground(Color.GRAY);
+        setBackground(Color.WHITE);
         current = new Snapshot(this);
         previous = new Snapshot(this);
         
         // Container for screen and controls
         JPanel container = new JPanel();
+        container.setBackground(getBackground());
         container.setLayout(new BorderLayout());
 
         // Screen panel
-        screen = new Screen(this);
-        screen.setPreferredSize(new Dimension(500, 500));
+        screen = new Screen(this, Screen.DEFAULT_ASPECT_RATIO);
         container.add(screen, BorderLayout.CENTER);
 
         // Control panel
@@ -72,7 +67,7 @@ public class SceneEditFrame extends SnapshotFrame {
         // Project view
         projectPanel = new ProjectOverviewPanel(this);
         add(projectPanel, BorderLayout.WEST);
-
+        refresh();
     }
 
     public Snapshot getCurrentSnapshot() {
